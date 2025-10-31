@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.util.ProxyUtils;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -14,7 +15,9 @@ import java.util.Objects;
 @Setter
 @Embeddable
 public class MovieCategoryId implements Serializable {
+
     private static final long serialVersionUID = 364815906128879151L;
+
     @NotNull
     @Column(name = "MovieID", nullable = false)
     private Integer movieID;

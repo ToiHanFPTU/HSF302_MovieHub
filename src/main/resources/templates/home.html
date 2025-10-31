@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Home</title>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            margin:0; font-family: Arial;
+            background: #f2f6ff;
+        }
+        .navbar {
+            background:#007bff; padding:15px;
+            color:white; display:flex; justify-content:space-between;
+            align-items:center;
+        }
+        .navbar a {
+            color:white; text-decoration:none; margin-left:15px;
+        }
+        .content {
+            padding: 40px; text-align:center;
+        }
+    </style>
+</head>
+<body>
+<div class="navbar">
+    <div>My Website</div>
+    <div>
+        <span th:text="'Welcome, ' + ${session.user.fullName}"></span>
+        <a href="/logout">Logout</a>
+    </div>
+</div>
+
+<div class="content">
+    <h2>Home Page</h2>
+    <p>Bạn đã đăng nhập thành công.</p>
+</div>
+</body>
+</html>

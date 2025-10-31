@@ -5,8 +5,10 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -37,7 +39,11 @@ public class User {
     @Column(name = "Phone", length = 20)
     private String phone;
 
-    @Column(name = "CreatedAt")
-    private Instant createdAt;
+    @Size(max = 20)
+    @Column(name = "role", length = 20)
+    private String role;
 
+    @CreationTimestamp
+    @Column(name = "CreatedAt", updatable = false)
+    private LocalDateTime createdAt;
 }

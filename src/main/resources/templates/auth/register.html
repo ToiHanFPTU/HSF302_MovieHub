@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Register</title>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: sans-serif; background: #eef1f6; display:flex; justify-content:center; align-items:center; height:100vh; }
+        .container {
+            width: 400px; background: white;
+            padding: 25px; border-radius: 10px; box-shadow: 0 0 15px rgba(0,0,0,.15);
+        }
+        h2 { text-align: center; }
+        input {
+            width: 100%; padding: 10px; margin-top: 10px;
+            border: 1px solid #ccc; border-radius: 5px;
+        }
+        button {
+            width: 100%; padding: 10px; margin-top: 15px;
+            background: #28a745; border: none;
+            border-radius: 5px; cursor: pointer; color: white;
+        }
+        button:hover { background: #1d7e33; }
+        .message { color: red; text-align:center; }
+        .link { text-align: center; margin-top: 10px; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>Register</h2>
+
+    <p class="message" th:text="${message}"></p>
+
+    <form method="post" action="/auth/register">
+        <input type="text" name="fullName" placeholder="Full name">
+        <input type="email" name="email" placeholder="Email" required>
+        <input type="text" name="phone" placeholder="Phone (optional)">
+        <input type="password" name="password" placeholder="Password" required>
+
+        <button type="submit">Create account</button>
+        <div class="link">
+            Đã có tài khoản? <a href="/auth/login">Login</a>
+        </div>
+    </form>
+</div>
+</body>
+</html>
