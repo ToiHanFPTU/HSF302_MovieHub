@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Chi tiết vé</title>
+</head>
+<body>
+<h2>Chi tiết vé</h2>
+
+<table border="1">
+    <tr>
+        <th>ID Vé</th>
+        <td th:text="${ticket.id}"></td>
+    </tr>
+    <tr>
+        <th>Phim</th>
+        <td th:text="${ticket.showtimeID.movieID.title}"></td>
+    </tr>
+    <tr>
+        <th>Suất chiếu</th>
+        <td th:text="${#dates.format(ticket.showtimeID.startTime, 'HH:mm dd/MM/yyyy')} + ' - ' + ${#dates.format(ticket.showtimeID.endTime, 'HH:mm dd/MM/yyyy')}"></td>
+    </tr>
+    <tr>
+        <th>Phòng</th>
+        <td th:text="${ticket.showtimeID.roomID.name}"></td>
+    </tr>
+    <tr>
+        <th>Ghế</th>
+        <td th:text="${ticket.seatID.name}"></td>
+    </tr>
+    <tr>
+        <th>Giá</th>
+        <td th:text="${ticket.price}"></td>
+    </tr>
+    <tr>
+        <th>Thời gian đặt</th>
+        <td th:text="${#dates.format(ticket.bookingTime, 'HH:mm dd/MM/yyyy')}"></td>
+    </tr>
+</table>
+
+<br>
+<a th:href="@{/ticket-detail/{transactionId}(transactionId=${ticket.transactionID.id})}">Quay về danh sách vé</a>
+<br>
+<a th:href="@{/home}">Quay về Home</a>
+
+</body>
+</html>

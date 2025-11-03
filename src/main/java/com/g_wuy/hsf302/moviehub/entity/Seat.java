@@ -29,4 +29,7 @@ public class Seat {
     @Column(name = "SeatType", length = 50)
     private String seatType;
 
+    @Transient
+    private boolean booked;
+
 }

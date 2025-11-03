@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Đặt vé</title>
+    <style>
+        .seat {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            margin: 5px;
+            text-align: center;
+            line-height: 40px;
+            border: 1px solid #333;
+            cursor: pointer;
+        }
+        .booked { background-color: #f44336; cursor: not-allowed; }
+        .selected { background-color: #4caf50; }
+    </style>
+    <script>
+        let selectedSeats = [];
+
+        function toggleSeat(seatId) {
+            const seatDiv = document.getElementById('seat-' + seatId);
+            if (seatDiv.classList.contains('booked')) return;
+
+            if (selectedSeats.includes(seatId)) {
+                selectedSeats = selectedSeats.filter(s => s !== seatId);
+                seatDiv.classList.remove('selected');
+            } else {
+                selectedSeats.push(seatId);
+                seatDiv.classList.add('selected');
+            }
+
+            document.getElementById('seatIds').value = selectedSeats.join(',');
+        }
+    </script>
+</head>
+<body>
+<h2>Đặt vé</h2>
+
+<p th:text="${message}" style="color: green;"></p>
+
+<form th:action="@{/book-ticket}" method="post">
+    <input type="hidden" name="showtimeId" th:value="${showtimeId}">
+    <input type="hidden" name="seatIds" id="seatIds">
+
+    <div>
+        <p>Chọn ghế:</p>
+        <div th:each="seat : ${seats}">
+            <div th:id="'seat-' + ${seat.id}"
+                 th:text="${seat.name}"
+                 th:class="'seat ' + (${seat.booked} ? 'booked' : '')"
+                 onclick="toggleSeat([[${seat.id}]])">
+            </div>
+        </div>
+    </div>
+    <br>
+    <button type="submit">Đặt vé</button>
+</form>
+
+<br>
+<a th:href="@{/home}">Quay về Home</a>
+
+</body>
+</html>
