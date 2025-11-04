@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -36,4 +38,11 @@ public class Movie {
     @Column(name = "\"Language\"", length = 50)
     private String language;
 
+    @ManyToMany
+    @JoinTable(
+            name = "movie_category",
+            joinColumns = @JoinColumn(name = "MovieID"),
+            inverseJoinColumns = @JoinColumn(name = "CategoryID")
+    )
+    private Set<Category> categories = new HashSet<>();
 }

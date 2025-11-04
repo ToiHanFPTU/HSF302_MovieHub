@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Movie</title>
+</head>
+<body>
+<h1>➕ Add New Movie</h1>
+
+<form th:action="@{/admin/movies/add}" th:object="${movie}" method="post">
+    <label>Title:</label>
+    <input type="text" th:field="*{title}" required><br>
+
+    <label>Description:</label><br>
+    <textarea th:field="*{description}" rows="4" cols="50"></textarea><br>
+
+    <label>Duration (minutes):</label>
+    <input type="number" th:field="*{duration}" required><br>
+
+    <label>Release Date:</label>
+    <input type="date" th:field="*{releaseDate}"><br>
+
+    <label>Language:</label>
+    <input type="text" th:field="*{language}"><br>
+
+    <label>Categories:</label><br>
+    <div th:each="c : ${allCategories}">
+        <input type="checkbox" name="categoryIds" th:value="${c.id}">
+        <span th:text="${c.categoryName}"></span><br>
+    </div>
+
+    <button type="submit">💾 Save</button>
+</form>
+
+<a th:href="@{/admin/movies}">⬅ Back to Movie List</a>
+</body>
+</html>

@@ -6,30 +6,36 @@ import com.g_wuy.hsf302.moviehub.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class CategoryServiceImpl implements CategoryService {
     @Autowired
-    private CategoryRepository categoryRepository;
+    private  CategoryRepository categoryRepository;
+
 
     @Override
-    public Category addCategory(Category category) {
+    public List<Category> getAllCategories() {
+        return categoryRepository.findAll();
+    }
+
+    @Override
+    public Category getCategoryById(Integer id) {
+        return categoryRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public List<Category> getCategoriesByIds(List<Integer> ids) {
+        return categoryRepository.findAllById(ids);
+    }
+
+    @Override
+    public Category saveCategory(Category category) {
         return categoryRepository.save(category);
     }
 
     @Override
-    public void deleteCategory(Category category) {
-        Category existCate = categoryRepository.findById(category.getId()).orElse(null);
-        if (existCate != null) {
-            categoryRepository.delete(existCate);
-        }
-    }
-
-    @Override
-    public void updateCategory(Category category) {
-        Category existCate = categoryRepository.findById(category.getId()).orElse(null);
-        if (existCate != null) {
-            existCate.setCategoryName(category.getCategoryName());
-            categoryRepository.save(existCate);
-        }
+    public void deleteCategory(Integer id) {
+        categoryRepository.deleteById(id);
     }
 }

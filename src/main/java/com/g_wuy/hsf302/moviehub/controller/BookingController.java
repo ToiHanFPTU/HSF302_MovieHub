@@ -5,6 +5,7 @@ import com.g_wuy.hsf302.moviehub.entity.Seat;
 import com.g_wuy.hsf302.moviehub.entity.Ticket;
 import com.g_wuy.hsf302.moviehub.entity.User;
 import com.g_wuy.hsf302.moviehub.repository.SeatRepository;
+import com.g_wuy.hsf302.moviehub.service.MovieService;
 import com.g_wuy.hsf302.moviehub.service.TicketService;
 import com.g_wuy.hsf302.moviehub.repository.ShowtimeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,12 +30,15 @@ public class BookingController {
     @Autowired
     private SeatRepository seatRepository;
 
-    // Trang chọn ghế
+    @Autowired
+    private MovieService movieService;
+
+
     @GetMapping("/ticket-book")
     public String showBookingPage(@RequestParam Integer showtimeId, HttpServletRequest request, Model model) {
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("user") == null) {
-            return "redirect:/auth/login";
+            return "redirect:/login";
         }
 
         List<Seat> seats = seatRepository.findByRoomID(
@@ -61,7 +65,7 @@ public class BookingController {
 
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("user") == null) {
-            return "redirect:/auth/login";
+            return "redirect:/login";
         }
 
         User user = (User) session.getAttribute("user");
@@ -78,7 +82,7 @@ public class BookingController {
             model.addAttribute("message", "Có ghế đã được đặt, vui lòng chọn lại!");
         }
 
-        // Trả lại trang đặt vé với danh sách ghế mới
+
         return "redirect:/ticket-book?showtimeId=" + showtimeId;
     }
 
@@ -89,7 +93,7 @@ public class BookingController {
                                            Model model) {
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("user") == null) {
-            return "redirect:/auth/login";
+            return "redirect:/login";
         }
 
         List<Ticket> tickets = ticketService.getTicketsByTransaction(transactionId);
@@ -97,14 +101,13 @@ public class BookingController {
         return "booking/list_tickets";
     }
 
-    // Xem chi tiết từng vé
     @GetMapping("/ticket/{ticketId}")
     public String viewSingleTicket(@PathVariable Integer ticketId,
                                    HttpServletRequest request,
                                    Model model) {
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("user") == null) {
-            return "redirect:/auth/login";
+            return "redirect:/login";
         }
 
         Ticket ticket = ticketService.getTicketById(ticketId);
