@@ -17,9 +17,6 @@ public class AuthController {
     @Autowired
     UserService userService;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
     @GetMapping
     public String root() {
         return "auth/login";  // trả về file home.html
@@ -41,7 +38,7 @@ public class AuthController {
                            @RequestParam String password,
                            HttpServletRequest request) {
         User user = userService.getUserByEmail(email);
-        boolean match = passwordEncoder.matches(password, user.getPasswordHash());
+        boolean match = password.equals(user.getPasswordHash()) ;
         if (!match) {
             request.setAttribute("message", "Invalid username or password");
             return "auth/login";
