@@ -34,5 +34,4 @@ public class Transaction {
 
     @Column(name = "TransactionDate")
     private Instant transactionDate;
-
 }

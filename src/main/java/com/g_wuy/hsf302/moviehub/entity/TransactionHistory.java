@@ -28,5 +28,4 @@ public class TransactionHistory {
 
     @Column(name = "UpdatedAt")
     private Instant updatedAt;
-
 }
