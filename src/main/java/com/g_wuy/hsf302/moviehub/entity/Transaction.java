@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Nationalized;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -34,5 +35,10 @@ public class Transaction {
 
     @Column(name = "TransactionDate")
     private Instant transactionDate;
+
+    @Size(max = 50)
+    @Nationalized
+    @Column(name = "Status", length = 50)
+    private String status;
 
 }

@@ -12,20 +12,19 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @Controller
-@RequestMapping("/payment")
 public class PaymentController {
 
     @Autowired
     private PaymentService paymentService;
 
-    @GetMapping("/form/{transactionId}")
+    @GetMapping("/payment/form/{transactionId}")
     public String showPaymentForm(@PathVariable Integer transactionId, Model model) {
         model.addAttribute("transactionId", transactionId);
         model.addAttribute("vnpRequest", new VNPayRequest());
         return "payment-form"; // file payment-form.html
     }
 
-    @PostMapping("/create/{transactionId}")
+    @PostMapping("/payment/create/{transactionId}")
     public String createPayment(@PathVariable Integer transactionId,
                                 @ModelAttribute VNPayRequest vnpRequest,
                                 HttpServletRequest servletRequest,
@@ -44,8 +43,7 @@ public class PaymentController {
         }
     }
 
-    // ✅ Xử lý callback từ VNPay
-    @GetMapping("/return/{transactionId}")
+    @GetMapping("/payment/return/{transactionId}")
     public String handleVNPayReturn(@PathVariable Integer transactionId,
                                     @RequestParam Map<String, String> params,
                                     Model model) {

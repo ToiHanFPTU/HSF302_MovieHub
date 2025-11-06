@@ -135,17 +135,17 @@ public class PaymentService {
             payment.setOrderInfo(params.get("vnp_OrderInfo"));
 
             if ("00".equals(params.get("vnp_ResponseCode"))) {
-                transaction.setTransactionStatus("DONE");
+                transaction.setStatus("DONE");
                 payment.setPaymentStatus("COMPLETED");
             } else {
-                transaction.setTransactionStatus("FAILED");
+                transaction.setStatus("FAILED");
                 payment.setPaymentStatus("FAILED");
             }
 
             paymentRepository.save(payment);
             transactionRepository.save(transaction);
 
-            return "Giao dịch " + transaction.getTransactionStatus().toLowerCase() + "!";
+            return "Giao dịch " + transaction.getStatus().toLowerCase() + "!";
 
         } catch (Exception e) {
             e.printStackTrace();

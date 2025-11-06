@@ -20,7 +20,7 @@ public class TransactionHistory {
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "TransactionID", nullable = false)
-    private Transaction transactionID;
+    private Transaction transaction;
 
     @Size(max = 50)
     @Column(name = "Status", length = 50)
