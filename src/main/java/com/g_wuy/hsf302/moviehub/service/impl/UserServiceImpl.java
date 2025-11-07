@@ -27,17 +27,17 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUserByPasswordAndEmail(String password, String email) {
-        return (User) userRepository.findUserByPasswordHashAndEmail(password, email).orElse(null);
+        return userRepository.findUserByPasswordHashAndEmail(password, email);
     }
 
     @Override
     public User getUserByEmail(String email) {
-        return (User) userRepository.findUserByEmail(email).orElse(null);
+        return userRepository.findUserByEmail(email);
     }
 
     @Override
     public User getUserByUsername(String username) {
-        return (User) userRepository.findUserByFullName(username).orElse(null);
+        return userRepository.findUserByFullName(username);
     }
 
     @Override

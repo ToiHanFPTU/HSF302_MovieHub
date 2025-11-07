@@ -37,15 +37,17 @@ public class AuthController {
 
 
     @PostMapping("/auth/login")
-    public String doLogin(@RequestParam String email,
-                           @RequestParam String password,
+    public String doLogin(@RequestParam("email") String email,
+                           @RequestParam("password") String password,
                            HttpServletRequest request) {
+        System.out.println("email: " + email);
+        System.out.println("password: " + password);
         User user = userService.getUserByEmail(email);
         if (user == null) {
             request.setAttribute("message", "User not found");
             return "auth/login";
         }
-        boolean match = passwordEncoder.matches(password, user.getPasswordHash());
+        boolean match = password.equals(user.getPasswordHash());
         if (!match) {
             request.setAttribute("message", "Invalid username or password");
             return "auth/login";
