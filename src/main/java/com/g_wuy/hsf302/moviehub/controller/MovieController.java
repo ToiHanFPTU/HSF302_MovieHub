@@ -21,11 +21,11 @@ public class MovieController {
     @Autowired
     private CategoryService categoryService;
 
-    /* ---------- CUSTOMER: xem danh sách phim ---------- */
+
     @GetMapping("/movies")
     public String listForCustomer(Model model) {
         model.addAttribute("movies", movieService.getAllMovies());
-        return "home"; // Trang người dùng xem phim
+        return "home";
     }
 
     /* ---------- ADMIN: danh sách phim ---------- */

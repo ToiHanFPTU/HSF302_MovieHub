@@ -7,23 +7,19 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Nationalized;
 
-import java.util.HashSet;
-import java.util.Set;
-
 @Getter
 @Setter
 @Entity
-public class Category {
+public class Payment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "category_id", nullable = false)
+    @Column(name = "payment_id", nullable = false)
     private Integer id;
 
-    @Size(max = 100)
+    @Size(max = 50)
     @NotNull
     @Nationalized
-    @Column(name = "category_name", nullable = false, length = 100)
-    private String categoryName;
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<MovieCategory> movieCategories = new HashSet<>();
+    @Column(name = "payment_name", nullable = false, length = 50)
+    private String paymentName;
+
 }

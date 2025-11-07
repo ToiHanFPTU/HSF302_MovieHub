@@ -47,7 +47,7 @@ public class AuthController {
         if(user.getRole().equals("Admin")){
             url = "admin/dashboard";
         } else {
-            url = "home";
+            url = "redirect:/movies";
         }
 
         HttpSession session = request.getSession(true);
