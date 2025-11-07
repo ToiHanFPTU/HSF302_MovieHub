@@ -70,9 +70,12 @@
                      style="height: 300px; object-fit: cover;">
                 <div class="card-body d-flex flex-column">
                     <h5 class="card-title" th:text="${movie.title}"></h5>
-                    <p class="card-text" th:text="${movie.description != null ? movie.description : 'No description'}"></p>
-                    <p class="mb-1"><strong>Duration:</strong> <span th:text="${movie.duration != null ? movie.duration : 'N/A'}"></span> min</p>
-                    <p class="mb-1"><strong>Language:</strong> <span th:text="${movie.language != null ? movie.language : 'N/A'}"></span></p>
+                    <p class="card-text"
+                       th:text="${movie.description != null ? movie.description : 'No description'}"></p>
+                    <p class="mb-1"><strong>Duration:</strong> <span
+                            th:text="${movie.duration != null ? movie.duration : 'N/A'}"></span> min</p>
+                    <p class="mb-1"><strong>Language:</strong> <span
+                            th:text="${movie.language != null ? movie.language : 'N/A'}"></span></p>
                     <p class="mb-0"><strong>Categories:</strong>
                         <span th:if="${movie.categories == null or movie.categories.isEmpty()}">None</span>
                         <span th:unless="${movie.categories == null or movie.categories.isEmpty()}">

@@ -1,9 +1,15 @@
 package com.g_wuy.hsf302.moviehub.service.impl;
 
+import com.g_wuy.hsf302.moviehub.entity.Category;
+import com.g_wuy.hsf302.moviehub.entity.Movie;
+import com.g_wuy.hsf302.moviehub.entity.MovieCategory;
+import com.g_wuy.hsf302.moviehub.entity.MovieCategoryId;
+import com.g_wuy.hsf302.moviehub.model.response.MovieResponse;
 import com.g_wuy.hsf302.moviehub.entity.*;
 import com.g_wuy.hsf302.moviehub.repository.CategoryRepository;
 import com.g_wuy.hsf302.moviehub.repository.MovieRepository;
 import com.g_wuy.hsf302.moviehub.service.MovieService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,8 +26,8 @@ public class MovieServiceImpl implements MovieService {
     @Autowired
     private CategoryRepository categoryRepository;
     @Override
-    public List<Movie> getAllMovies() {
-        return movieRepository.findAll();
+    public List<MovieResponse> getAllMovies() {
+        return movieRepository.getMovieWithCategories();
     }
 
     @Override
@@ -30,6 +36,7 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
+    @Transactional
     public Movie saveMovieWithCategories(Movie movie, List<Integer> categoryIds) {
         Set<MovieCategory> movieCategories = new HashSet<>();
         for (Integer catId : categoryIds) {
@@ -45,7 +52,7 @@ public class MovieServiceImpl implements MovieService {
                 movieCategories.add(mc);
             }
         }
-        movie.setMovieCategories(movieCategories);
+        movie.setCategories(movieCategories);
         return movieRepository.save(movie);
     }
 
@@ -59,10 +66,10 @@ public class MovieServiceImpl implements MovieService {
         existingMovie.setDuration(movie.getDuration());
         existingMovie.setReleaseDate(movie.getReleaseDate());
         existingMovie.setLanguage(movie.getLanguage());
-        existingMovie.setImageUrl(movie.getImageUrl());
+        existingMovie.setImage(movie.getImage());
 
         // ✅ Xóa category cũ, set mới
-        existingMovie.getMovieCategories().clear();
+        existingMovie.getCategories().clear();
         Set<MovieCategory> movieCategories = new HashSet<>();
         for (Integer catId : categoryIds) {
             Category category = categoryRepository.findById(catId).orElse(null);
@@ -77,7 +84,7 @@ public class MovieServiceImpl implements MovieService {
                 movieCategories.add(mc);
             }
         }
-        existingMovie.getMovieCategories().addAll(movieCategories);
+        existingMovie.getCategories().addAll(movieCategories);
 
         return movieRepository.save(existingMovie);
     }

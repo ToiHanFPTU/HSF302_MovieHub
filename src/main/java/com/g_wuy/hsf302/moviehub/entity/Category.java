@@ -16,8 +16,11 @@ import java.util.Set;
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "category_id", nullable = false)
+    @Column(name = "CategoryID")
     private Integer id;
+
+    @Column(name = "CategoryName", nullable = false)
+    private String name;
 
     @Size(max = 100)
     @NotNull

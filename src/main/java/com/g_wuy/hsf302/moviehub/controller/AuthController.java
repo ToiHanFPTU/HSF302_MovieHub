@@ -18,23 +18,23 @@ public class AuthController {
 
     @GetMapping
     public String root() {
-        return "auth/login";  // trả về file home.html
+        return "auth/login";
     }
 
     @GetMapping("/auth/login")
     public String loginPage() {
-        return "auth/login";  // trả về file login.html
+        return "auth/login";
     }
 
     @GetMapping("/auth/register")
     public String registerPage() {
-        return "auth/register";  // trả về file register.html
+        return "auth/register";
     }
 
 
     @PostMapping("/auth/login")
-    public String doLogin(@RequestParam String email,
-                           @RequestParam String password,
+    public String doLogin(@RequestParam("email") String email,
+                           @RequestParam("password") String password,
                            HttpServletRequest request) {
         User user = userService.getUserByEmail(email);
         boolean match = password.equals(user.getPasswordHash()) ;
