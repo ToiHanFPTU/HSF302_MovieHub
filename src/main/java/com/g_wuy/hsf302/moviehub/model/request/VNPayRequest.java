@@ -1,4 +1,4 @@
-package com.g_wuy.hsf302.moviehub.model.dto.request;
+package com.g_wuy.hsf302.moviehub.model.request;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

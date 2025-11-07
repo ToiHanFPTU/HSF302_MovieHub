@@ -23,17 +23,15 @@
     </thead>
     <tbody>
     <tr th:each="m : ${movies}">
-        <td th:text="${m.id}"></td>
+        <td th:text="${m.movieId}"></td>
         <td th:text="${m.title}"></td>
         <td th:text="${m.duration}"></td>
         <td th:text="${m.releaseDate}"></td>
         <td th:text="${m.language}"></td>
+        <td th:text="${m.categories}"></td>
         <td>
-            <span th:each="c : ${m.categories}" th:text="${c.categoryName} + ' '"></span>
-        </td>
-        <td>
-            <a th:href="@{'/admin/movies/edit/' + ${m.id}}">✏ Edit</a> |
-            <a th:href="@{'/admin/movies/delete/' + ${m.id}}"
+            <a th:href="@{'/admin/movies/edit/' + ${m.movieId}}">✏ Edit</a> |
+            <a th:href="@{'/admin/movies/delete/' + ${m.movieId}}"
                onclick="return confirm('Are you sure to delete this movie?')">🗑 Delete</a>
         </td>
     </tr>

@@ -2,6 +2,7 @@ package com.g_wuy.hsf302.moviehub.service.impl;
 
 import com.g_wuy.hsf302.moviehub.entity.Category;
 import com.g_wuy.hsf302.moviehub.entity.Movie;
+import com.g_wuy.hsf302.moviehub.model.response.MovieResponse;
 import com.g_wuy.hsf302.moviehub.repository.CategoryRepository;
 import com.g_wuy.hsf302.moviehub.repository.MovieRepository;
 import com.g_wuy.hsf302.moviehub.service.MovieService;
@@ -22,8 +23,8 @@ public class MovieServiceImpl implements MovieService {
     private  CategoryRepository categoryRepository;
 
     @Override
-    public List<Movie> getAllMovies() {
-        return movieRepository.findAll();
+    public List<MovieResponse> getAllMovies() {
+        return movieRepository.getMovieWithCategories();
     }
 
     @Override

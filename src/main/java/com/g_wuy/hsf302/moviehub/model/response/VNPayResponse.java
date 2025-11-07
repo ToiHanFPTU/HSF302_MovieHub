@@ -1,4 +1,4 @@
-package com.g_wuy.hsf302.moviehub.model.dto.response;
+package com.g_wuy.hsf302.moviehub.model.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

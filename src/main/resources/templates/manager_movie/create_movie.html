@@ -26,7 +26,7 @@
     <label>Categories:</label><br>
     <div th:each="c : ${allCategories}">
         <input type="checkbox" name="categoryIds" th:value="${c.id}">
-        <span th:text="${c.categoryName}"></span><br>
+        <span th:text="${c.name}"></span><br>
     </div>
 
     <button type="submit">💾 Save</button>

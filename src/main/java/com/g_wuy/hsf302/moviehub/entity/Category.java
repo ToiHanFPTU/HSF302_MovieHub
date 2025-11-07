@@ -1,14 +1,11 @@
 package com.g_wuy.hsf302.moviehub.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.HashSet;
-
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -16,14 +13,12 @@ import java.util.Set;
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "CategoryID", nullable = false)
+    @Column(name = "CategoryID")
     private Integer id;
 
-    @Size(max = 100)
-    @NotNull
-    @Column(name = "CategoryName", nullable = false, length = 100)
-    private String categoryName;
+    @Column(name = "CategoryName", nullable = false)
+    private String name;
 
     @ManyToMany(mappedBy = "categories")
-    private Set<Movie> movies = new HashSet<>();
+    private List<Movie> movies = new ArrayList<>();
 }

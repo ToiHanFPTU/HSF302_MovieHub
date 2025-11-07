@@ -1,7 +1,7 @@
 package com.g_wuy.hsf302.moviehub.controller;
 
-import com.g_wuy.hsf302.moviehub.model.dto.request.VNPayRequest;
-import com.g_wuy.hsf302.moviehub.model.dto.response.VNPayResponse;
+import com.g_wuy.hsf302.moviehub.model.request.VNPayRequest;
+import com.g_wuy.hsf302.moviehub.model.response.VNPayResponse;
 import com.g_wuy.hsf302.moviehub.service.impl.PaymentService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
