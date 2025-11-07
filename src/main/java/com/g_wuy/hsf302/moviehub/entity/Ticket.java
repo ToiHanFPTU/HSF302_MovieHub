@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -14,33 +15,20 @@ import java.time.Instant;
 public class Ticket {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "TicketID", nullable = false)
+    @Column(name = "ticket_id", nullable = false)
     private Integer id;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "ShowtimeID", nullable = false)
-    private Showtime showtimeID;
+    @JoinColumn(name = "seat_id", nullable = false)
+    private Seat seat;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "SeatID", nullable = false)
-    private Seat seatID;
-
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "UserID", nullable = false)
-    private User userID;
-
-    @NotNull
-    @Column(name = "Price", nullable = false, precision = 10, scale = 2)
+    @Column(name = "price", nullable = false, precision = 10, scale = 2)
     private BigDecimal price;
 
-    @Column(name = "BookingTime")
+    @ColumnDefault("getdate()")
+    @Column(name = "booking_time")
     private Instant bookingTime;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "TransactionID")
-    private Transaction transactionID;
 
 }

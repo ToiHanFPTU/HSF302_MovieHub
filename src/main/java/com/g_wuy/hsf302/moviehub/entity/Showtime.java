@@ -13,25 +13,25 @@ import java.time.Instant;
 public class Showtime {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ShowtimeID", nullable = false)
+    @Column(name = "showtime_id", nullable = false)
     private Integer id;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "MovieID", nullable = false)
-    private Movie movieID;
+    @JoinColumn(name = "movie_id", nullable = false)
+    private Movie movie;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "RoomID", nullable = false)
-    private Room roomID;
+    @JoinColumn(name = "room_id", nullable = false)
+    private Room room;
 
     @NotNull
-    @Column(name = "StartTime", nullable = false)
+    @Column(name = "start_time", nullable = false)
     private Instant startTime;
 
     @NotNull
-    @Column(name = "EndTime", nullable = false)
+    @Column(name = "end_time", nullable = false)
     private Instant endTime;
 
 }

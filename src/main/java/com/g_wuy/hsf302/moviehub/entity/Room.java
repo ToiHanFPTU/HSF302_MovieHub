@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Nationalized;
 
 @Getter
 @Setter
@@ -12,16 +13,17 @@ import lombok.Setter;
 public class Room {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "RoomID", nullable = false)
+    @Column(name = "room_id", nullable = false)
     private Integer id;
 
     @Size(max = 50)
     @NotNull
-    @Column(name = "RoomName", nullable = false, length = 50)
+    @Nationalized
+    @Column(name = "room_name", nullable = false, length = 50)
     private String roomName;
 
     @NotNull
-    @Column(name = "Capacity", nullable = false)
+    @Column(name = "capacity", nullable = false)
     private Integer capacity;
 
 }

@@ -5,7 +5,6 @@ import com.g_wuy.hsf302.moviehub.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,9 +15,6 @@ public class AuthController {
 
     @Autowired
     UserService userService;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
     @GetMapping
     public String root() {
@@ -40,14 +36,8 @@ public class AuthController {
     public String doLogin(@RequestParam("email") String email,
                            @RequestParam("password") String password,
                            HttpServletRequest request) {
-        System.out.println("email: " + email);
-        System.out.println("password: " + password);
         User user = userService.getUserByEmail(email);
-        if (user == null) {
-            request.setAttribute("message", "User not found");
-            return "auth/login";
-        }
-        boolean match = password.equals(user.getPasswordHash());
+        boolean match = password.equals(user.getPasswordHash()) ;
         if (!match) {
             request.setAttribute("message", "Invalid username or password");
             return "auth/login";
@@ -57,7 +47,7 @@ public class AuthController {
         if(user.getRole().equals("Admin")){
             url = "admin/dashboard";
         } else {
-            url = "home";
+            url = "redirect:/movies";
         }
 
         HttpSession session = request.getSession(true);

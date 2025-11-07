@@ -2,7 +2,10 @@ package com.g_wuy.hsf302.moviehub.service.impl;
 
 import com.g_wuy.hsf302.moviehub.entity.Category;
 import com.g_wuy.hsf302.moviehub.entity.Movie;
+import com.g_wuy.hsf302.moviehub.entity.MovieCategory;
+import com.g_wuy.hsf302.moviehub.entity.MovieCategoryId;
 import com.g_wuy.hsf302.moviehub.model.response.MovieResponse;
+import com.g_wuy.hsf302.moviehub.entity.*;
 import com.g_wuy.hsf302.moviehub.repository.CategoryRepository;
 import com.g_wuy.hsf302.moviehub.repository.MovieRepository;
 import com.g_wuy.hsf302.moviehub.service.MovieService;
@@ -19,9 +22,9 @@ public class MovieServiceImpl implements MovieService {
 
     @Autowired
     private MovieRepository movieRepository;
-    @Autowired
-    private  CategoryRepository categoryRepository;
 
+    @Autowired
+    private CategoryRepository categoryRepository;
     @Override
     public List<MovieResponse> getAllMovies() {
         return movieRepository.getMovieWithCategories();
@@ -35,30 +38,55 @@ public class MovieServiceImpl implements MovieService {
     @Override
     @Transactional
     public Movie saveMovieWithCategories(Movie movie, List<Integer> categoryIds) {
-        Set<Category> cats = new HashSet<>();
-        if (categoryIds != null && !categoryIds.isEmpty()) {
-            cats.addAll(categoryRepository.findAllById(categoryIds));
+        Set<MovieCategory> movieCategories = new HashSet<>();
+        for (Integer catId : categoryIds) {
+            Category category = categoryRepository.findById(catId).orElse(null);
+            if (category != null) {
+                MovieCategory mc = new MovieCategory();
+                MovieCategoryId mcId = new MovieCategoryId();
+                mcId.setMovieId(movie.getId());
+                mcId.setCategoryId(catId);
+                mc.setId(mcId);
+                mc.setMovie(movie);
+                mc.setCategory(category);
+                movieCategories.add(mc);
+            }
         }
-        movie.setCategories(cats);
+        movie.setCategories(movieCategories);
         return movieRepository.save(movie);
     }
 
     @Override
-    @Transactional
     public Movie updateMovieWithCategories(Movie movie, List<Integer> categoryIds) {
-        Movie exist = movieRepository.findById(movie.getId()).orElse(null);
-        if (exist == null) return null;
-        exist.setTitle(movie.getTitle());
-        exist.setDescription(movie.getDescription());
-        exist.setDuration(movie.getDuration());
-        exist.setReleaseDate(movie.getReleaseDate());
-        exist.setLanguage(movie.getLanguage());
-        Set<Category> cats = new HashSet<>();
-        if (categoryIds != null && !categoryIds.isEmpty()) {
-            cats.addAll(categoryRepository.findAllById(categoryIds));
+        Movie existingMovie = movieRepository.findById(movie.getId()).orElse(null);
+        if (existingMovie == null) return null;
+
+        existingMovie.setTitle(movie.getTitle());
+        existingMovie.setDescription(movie.getDescription());
+        existingMovie.setDuration(movie.getDuration());
+        existingMovie.setReleaseDate(movie.getReleaseDate());
+        existingMovie.setLanguage(movie.getLanguage());
+        existingMovie.setImage(movie.getImage());
+
+        // ✅ Xóa category cũ, set mới
+        existingMovie.getCategories().clear();
+        Set<MovieCategory> movieCategories = new HashSet<>();
+        for (Integer catId : categoryIds) {
+            Category category = categoryRepository.findById(catId).orElse(null);
+            if (category != null) {
+                MovieCategory mc = new MovieCategory();
+                MovieCategoryId mcId = new MovieCategoryId();
+                mcId.setMovieId(existingMovie.getId());
+                mcId.setCategoryId(catId);
+                mc.setId(mcId);
+                mc.setMovie(existingMovie);
+                mc.setCategory(category);
+                movieCategories.add(mc);
+            }
         }
-        exist.setCategories(cats);
-        return movieRepository.save(exist);
+        existingMovie.getCategories().addAll(movieCategories);
+
+        return movieRepository.save(existingMovie);
     }
 
     @Override

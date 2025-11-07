@@ -1,11 +1,14 @@
 package com.g_wuy.hsf302.moviehub.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Nationalized;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -19,6 +22,11 @@ public class Category {
     @Column(name = "CategoryName", nullable = false)
     private String name;
 
-    @ManyToMany(mappedBy = "categories")
-    private List<Movie> movies = new ArrayList<>();
+    @Size(max = 100)
+    @NotNull
+    @Nationalized
+    @Column(name = "category_name", nullable = false, length = 100)
+    private String categoryName;
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<MovieCategory> movieCategories = new HashSet<>();
 }

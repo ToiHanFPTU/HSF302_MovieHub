@@ -1,15 +1,12 @@
 package com.g_wuy.hsf302.moviehub.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Nationalized;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -21,16 +18,19 @@ public class Movie {
     @Column(name = "MovieID", nullable = false)
     private Integer id;
 
-    @Size(max = 200)
-    @NotNull
     @Nationalized
     @Column(name = "Title", nullable = false, length = 200)
     private String title;
 
+    @Nationalized
     @Lob
+    @Column(name = "Description")
     private String description;
 
+    @Column(name = "Duration")
     private Integer duration;
+
+    @Column(name = "ReleaseDate")
     private LocalDate releaseDate;
 
     @Size(max = 50)
