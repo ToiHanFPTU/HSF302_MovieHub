@@ -45,7 +45,7 @@ public class AuthController {
 
         String url = "";
         if(user.getRole().equals("Admin")){
-            url = "admin/dashboard";
+            url = "admin/dashboard  ";
         } else {
             url = "redirect:/movies";
         }
