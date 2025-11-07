@@ -20,8 +20,18 @@ public class Ticket {
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "showtime_id", nullable = false)
+    private Showtime showtime;
+
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "seat_id", nullable = false)
     private Seat seat;
+
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     @NotNull
     @Column(name = "price", nullable = false, precision = 10, scale = 2)
@@ -30,5 +40,9 @@ public class Ticket {
     @ColumnDefault("getdate()")
     @Column(name = "booking_time")
     private Instant bookingTime;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "transaction_id")
+    private Transaction transaction;
 
 }

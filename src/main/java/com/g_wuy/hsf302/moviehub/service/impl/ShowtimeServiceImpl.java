@@ -14,8 +14,9 @@ public class ShowtimeServiceImpl implements ShowtimeService {
     @Autowired
     private ShowtimeRepository showtimeRepository;
 
+
     @Override
     public List<Showtime> getShowtimesByMovieId(Integer movieId) {
-        return showtimeRepository.findByMovie_Id(movieId);
+        return showtimeRepository.findByMovieIdOrderByStartTime(movieId);
     }
 }

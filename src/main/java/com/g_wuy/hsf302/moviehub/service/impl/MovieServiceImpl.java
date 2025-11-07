@@ -1,11 +1,11 @@
 package com.g_wuy.hsf302.moviehub.service.impl;
 
+
 import com.g_wuy.hsf302.moviehub.entity.Category;
 import com.g_wuy.hsf302.moviehub.entity.Movie;
 import com.g_wuy.hsf302.moviehub.entity.MovieCategory;
 import com.g_wuy.hsf302.moviehub.entity.MovieCategoryId;
-import com.g_wuy.hsf302.moviehub.model.response.MovieResponse;
-import com.g_wuy.hsf302.moviehub.entity.*;
+import com.g_wuy.hsf302.moviehub.model.dto.MovieDTO;
 import com.g_wuy.hsf302.moviehub.repository.CategoryRepository;
 import com.g_wuy.hsf302.moviehub.repository.MovieRepository;
 import com.g_wuy.hsf302.moviehub.service.MovieService;
@@ -13,9 +13,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class MovieServiceImpl implements MovieService {
@@ -25,9 +23,15 @@ public class MovieServiceImpl implements MovieService {
 
     @Autowired
     private CategoryRepository categoryRepository;
+
     @Override
-    public List<MovieResponse> getAllMovies() {
-        return movieRepository.getMovieWithCategories();
+    public List<MovieDTO> getAllMovies() {
+        List<Movie> movies = movieRepository.findAll();
+        List<MovieDTO> result = new ArrayList<>();
+        for (Movie m : movies) {
+            result.add(convertToDTO(m));
+        }
+        return result;
     }
 
     @Override
@@ -39,58 +43,78 @@ public class MovieServiceImpl implements MovieService {
     @Transactional
     public Movie saveMovieWithCategories(Movie movie, List<Integer> categoryIds) {
         Set<MovieCategory> movieCategories = new HashSet<>();
-        for (Integer catId : categoryIds) {
-            Category category = categoryRepository.findById(catId).orElse(null);
-            if (category != null) {
-                MovieCategory mc = new MovieCategory();
-                MovieCategoryId mcId = new MovieCategoryId();
-                mcId.setMovieId(movie.getId());
-                mcId.setCategoryId(catId);
-                mc.setId(mcId);
-                mc.setMovie(movie);
-                mc.setCategory(category);
-                movieCategories.add(mc);
+        if (categoryIds != null) {
+            for (Integer catId : categoryIds) {
+                categoryRepository.findById(catId).ifPresent(category -> {
+                    MovieCategory mc = new MovieCategory();
+                    MovieCategoryId mcId = new MovieCategoryId();
+                    mcId.setMovieId(null);
+                    mcId.setCategoryId(catId);
+                    mc.setId(mcId);
+                    mc.setMovie(movie);
+                    mc.setCategory(category);
+                    movieCategories.add(mc);
+                });
             }
         }
-        movie.setCategories(movieCategories);
+        movie.setMovieCategories(movieCategories);
         return movieRepository.save(movie);
     }
 
     @Override
+    @Transactional
     public Movie updateMovieWithCategories(Movie movie, List<Integer> categoryIds) {
-        Movie existingMovie = movieRepository.findById(movie.getId()).orElse(null);
-        if (existingMovie == null) return null;
+        Movie existing = movieRepository.findById(movie.getId()).orElse(null);
+        if (existing == null) return null;
 
-        existingMovie.setTitle(movie.getTitle());
-        existingMovie.setDescription(movie.getDescription());
-        existingMovie.setDuration(movie.getDuration());
-        existingMovie.setReleaseDate(movie.getReleaseDate());
-        existingMovie.setLanguage(movie.getLanguage());
-        existingMovie.setImage(movie.getImage());
+        existing.setTitle(movie.getTitle());
+        existing.setDescription(movie.getDescription());
+        existing.setDuration(movie.getDuration());
+        existing.setReleaseDate(movie.getReleaseDate());
+        existing.setLanguage(movie.getLanguage());
+        existing.setImageUrl(movie.getImageUrl());
 
-        // ✅ Xóa category cũ, set mới
-        existingMovie.getCategories().clear();
-        Set<MovieCategory> movieCategories = new HashSet<>();
-        for (Integer catId : categoryIds) {
-            Category category = categoryRepository.findById(catId).orElse(null);
-            if (category != null) {
-                MovieCategory mc = new MovieCategory();
-                MovieCategoryId mcId = new MovieCategoryId();
-                mcId.setMovieId(existingMovie.getId());
-                mcId.setCategoryId(catId);
-                mc.setId(mcId);
-                mc.setMovie(existingMovie);
-                mc.setCategory(category);
-                movieCategories.add(mc);
+        existing.getMovieCategories().clear();
+
+        if (categoryIds != null) {
+            for (Integer catId : categoryIds) {
+                categoryRepository.findById(catId).ifPresent(category -> {
+                    MovieCategory mc = new MovieCategory();
+                    MovieCategoryId mcId = new MovieCategoryId();
+                    mcId.setMovieId(existing.getId());
+                    mcId.setCategoryId(catId);
+                    mc.setId(mcId);
+                    mc.setMovie(existing);
+                    mc.setCategory(category);
+                    existing.getMovieCategories().add(mc);
+                });
             }
         }
-        existingMovie.getCategories().addAll(movieCategories);
 
-        return movieRepository.save(existingMovie);
+        return movieRepository.save(existing);
     }
 
     @Override
     public void deleteMovie(Integer id) {
         movieRepository.deleteById(id);
+    }
+
+    private MovieDTO convertToDTO(Movie movie) {
+        List<String> categoryNames = new ArrayList<>();
+        if (movie.getCategories() != null) {
+            for (Category c : movie.getCategories()) {
+                categoryNames.add(c.getCategoryName());
+            }
+        }
+        return new MovieDTO(
+                movie.getId(),
+                movie.getTitle(),
+                movie.getDescription(),
+                movie.getDuration(),
+                movie.getReleaseDate(),
+                movie.getLanguage(),
+                movie.getImageUrl(),
+                categoryNames
+        );
     }
 }

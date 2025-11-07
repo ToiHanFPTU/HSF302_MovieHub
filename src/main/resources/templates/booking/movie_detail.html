@@ -2,17 +2,11 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Movie List</title>
+    <title th:text="${movieDetail.title}">Movie Detail</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <style>
-        .card-text {
-            max-height: 120px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .card:hover {
-            transform: scale(1.03);
-            transition: 0.2s;
+        .showtime-btn {
+            margin: 5px 5px 5px 0;
         }
     </style>
 </head>
@@ -63,37 +57,53 @@
     </div>
 </nav>
 
-<!-- Movie List -->
+<!-- Movie Detail -->
 <div class="container mt-4">
-    <h2 class="text-center mb-4">🎬 Movie List</h2>
     <div class="row">
-        <div class="col-md-4 mb-4" th:each="movie : ${movies}">
-            <div class="card shadow-sm h-100">
-                <!-- Link toàn bộ card đến trang chi tiết -->
-                <a th:href="@{/movies/{id}(id=${movie.id})}" style="text-decoration: none; color: inherit;">
-                    <img th:src="${movie.imageUrl}" class="card-img-top" th:alt="${movie.title}"
-                         style="height: 300px; object-fit: cover;">
-                    <div class="card-body d-flex flex-column">
-                        <h5 class="card-title" th:text="${movie.title}"></h5>
-                        <p class="card-text"
-                           th:text="${movie.description != null ? movie.description : 'No description'}"></p>
-                        <p class="mb-1"><strong>Duration:</strong>
-                            <span th:text="${movie.duration != null ? movie.duration : 'N/A'}"></span> min
-                        </p>
-                        <p class="mb-1"><strong>Language:</strong>
-                            <span th:text="${movie.language != null ? movie.language : 'N/A'}"></span>
-                        </p>
-                        <p class="mb-0"><strong>Categories:</strong>
-                            <span th:if="${movie.categories == null or movie.categories.isEmpty()}">None</span>
-                            <span th:unless="${movie.categories == null or movie.categories.isEmpty()}">
-                                <span th:each="cat, iterStat : ${movie.categories}">
-                                    <span th:text="${cat}"></span><span th:if="${!iterStat.last}">, </span>
-                                </span>
-                            </span>
-                        </p>
-                    </div>
-                </a>
+        <!-- Poster -->
+        <div class="col-md-4">
+            <img th:src="${movieDetail.imageUrl}" th:alt="${movieDetail.title}" class="img-fluid rounded shadow">
+        </div>
+        <!-- Info -->
+        <div class="col-md-8">
+            <h2 th:text="${movieDetail.title}">Movie Title</h2>
+            <p th:text="${movieDetail.description}">Movie description...</p>
+
+            <div class="mb-2">
+                <strong>Duration:</strong>
+                <span th:text="${movieDetail.duration != null ? movieDetail.duration + ' min' : 'N/A'}"></span>
             </div>
+            <div class="mb-2">
+                <strong>Language:</strong>
+                <span th:text="${movieDetail.language != null ? movieDetail.language : 'N/A'}"></span>
+            </div>
+            <div class="mb-2">
+                <strong>Release Date:</strong>
+                <span th:text="${movieDetail.releaseDate != null ? movieDetail.releaseDate : 'N/A'}"></span>
+            </div>
+            <div class="mb-3">
+                <strong>Categories:</strong>
+                <span th:if="${movieDetail.categories == null or movieDetail.categories.isEmpty()}">None</span>
+                <span th:unless="${movieDetail.categories == null or movieDetail.categories.isEmpty()}">
+                    <span th:each="cat, iterStat : ${movieDetail.categories}">
+                        <span th:text="${cat}"></span><span th:if="${!iterStat.last}">, </span>
+                    </span>
+                </span>
+            </div>
+
+            <!-- Showtimes -->
+            <h5>Showtimes:</h5>
+            <form th:action="@{/showtime/choose}" method="get">
+                <div th:each="showtime : ${movieDetail.showtimes}">
+                    <input type="radio" th:id="'showtime-' + ${showtime.showtimeId}"
+                           th:name="showtimeId" th:value="${showtime.showtimeId}">
+                    <label th:for="'showtime-' + ${showtime.showtimeId}"
+                           th:text="${#temporals.format(showtime.startTime,'HH:mm')} + ' - ' + ${#temporals.format(showtime.endTime,'HH:mm')}">
+                    </label>
+                </div>
+                <button type="submit" class="btn btn-primary mt-2">Chọn ghế</button>
+            </form>
+
         </div>
     </div>
 </div>

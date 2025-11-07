@@ -16,17 +16,15 @@ import java.util.Set;
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "CategoryID")
+    @Column(name = "category_id")
     private Integer id;
-
-    @Column(name = "CategoryName", nullable = false)
-    private String name;
 
     @Size(max = 100)
     @NotNull
     @Nationalized
     @Column(name = "category_name", nullable = false, length = 100)
     private String categoryName;
+
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<MovieCategory> movieCategories = new HashSet<>();
 }
