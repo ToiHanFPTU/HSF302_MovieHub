@@ -39,4 +39,8 @@ public class Transaction {
     @Column(name = "status", length = 20)
     private String status;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+
 }

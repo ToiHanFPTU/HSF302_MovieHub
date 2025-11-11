@@ -32,9 +32,19 @@ public class PaymentService {
     @Autowired
     private PaymentRepository paymentRepository;
 
-    // ✅ Tạo link thanh toán VNPay
+    /**
+     * Tạo link thanh toán VNPay
+     * @param request VNPay request với amount và order info
+     * @param httpRequest HTTP request để lấy IP
+     * @param transactionId ID của transaction đã tạo sẵn
+     * @return VNPayResponse chứa payment URL
+     */
     public VNPayResponse createPayment(VNPayRequest request, HttpServletRequest httpRequest, Integer transactionId) {
         try {
+            // Validate transaction exists
+            Transaction transaction = transactionRepository.findById(transactionId)
+                    .orElseThrow(() -> new RuntimeException("Transaction not found with ID: " + transactionId));
+
             String vnp_TxnRef = VNPayConfiguration.getRandomNumber(8);
             String vnp_IpAddr = VNPayConfiguration.getIpAddress(httpRequest);
 
@@ -73,17 +83,23 @@ public class PaymentService {
             String vnp_SecureHash = vnPayConfiguration.hmacSHA512(vnPayConfiguration.getSecretKey(), hashData.toString());
             String paymentUrl = vnPayConfiguration.getVnpPayUrl() + "?" + query + "vnp_SecureHash=" + vnp_SecureHash;
 
-            // 💾 Tạo bản ghi Payment PENDING (để log lại giao dịch khởi tạo)
-            Transaction transaction = transactionRepository.findById(transactionId)
-                    .orElseThrow(() -> new RuntimeException("Transaction not found"));
+            transaction.setPaymentMethod("VNPAY");
+            transaction.setStatus("PENDING");
+            transaction.setTransactionDate(Instant.now());
+            transaction.setTotalAmount(BigDecimal.valueOf(request.getAmount()));
+            transactionRepository.save(transaction);
 
+            // ✅ Tạo bản ghi Payment PENDING
             Payment payment = new Payment();
             payment.setTransaction(transaction);
             payment.setPaymentMethod("VNPAY");
             payment.setTransactionCode(vnp_TxnRef);
             payment.setPaymentStatus("PENDING");
             payment.setAmount(BigDecimal.valueOf(request.getAmount()));
+            payment.setOrderInfo(request.getOrderInfo());
             payment.setPaymentDate(Instant.now());
+            payment.setCreatedAt(Instant.now());
+            payment.setUpdatedAt(Instant.now());
             paymentRepository.save(payment);
 
             return VNPayResponse.builder()
@@ -101,9 +117,15 @@ public class PaymentService {
         }
     }
 
-    // ✅ Xử lý callback VNPay trả về
+    /**
+     * Xử lý callback từ VNPay sau khi user thanh toán
+     * @param params Parameters từ VNPay return URL
+     * @param transactionId ID của transaction
+     * @return Message kết quả
+     */
     public String handleReturn(Map<String, String> params, Integer transactionId) {
         try {
+            // Validate signature
             String vnpSecureHash = params.get("vnp_SecureHash");
             params.remove("vnp_SecureHash");
             params.remove("vnp_SecureHashType");
@@ -113,18 +135,34 @@ public class PaymentService {
                 return "Lỗi xác minh chữ ký!";
             }
 
+            // Get transaction
             Transaction transaction = transactionRepository.findById(transactionId)
-                    .orElseThrow(() -> new RuntimeException("Transaction not found"));
+                    .orElseThrow(() -> new RuntimeException("Transaction not found with ID: " + transactionId));
 
-            BigDecimal amount = new BigDecimal(params.get("vnp_Amount")).divide(BigDecimal.valueOf(100));
+            BigDecimal amount = new BigDecimal(params.get("vnp_Amount"))
+                    .divide(BigDecimal.valueOf(100), 2, java.math.RoundingMode.HALF_UP);
+
+            // Update transaction
             transaction.setTotalAmount(amount);
+            transaction.setPaymentMethod("VNPAY");
 
+            // Find payment by transaction (more efficient)
             Payment payment = paymentRepository.findAll().stream()
-                    .filter(p -> p.getTransaction().equals(transaction))
-                    .reduce((first, second) -> second) // lấy bản ghi gần nhất
-                    .orElse(new Payment());
+                    .filter(p -> p.getTransaction() != null && p.getTransaction().getId().equals(transactionId))
+                    .filter(p -> "PENDING".equals(p.getPaymentStatus()))
+                    .reduce((first, second) -> second) // Get latest pending payment
+                    .orElseGet(() -> {
+                        // Create new payment if not found
+                        Payment newPayment = new Payment();
+                        newPayment.setTransaction(transaction);
+                        newPayment.setPaymentMethod("VNPAY");
+                        newPayment.setCreatedAt(Instant.now());
+                        return newPayment;
+                    });
 
+            // Update payment details
             payment.setPaymentDate(Instant.now());
+            payment.setUpdatedAt(Instant.now());
             payment.setVnpTransactionNo(params.get("vnp_TransactionNo"));
             payment.setVnpBankCode(params.get("vnp_BankCode"));
             payment.setVnpBankTranNo(params.get("vnp_BankTranNo"));
@@ -134,14 +172,17 @@ public class PaymentService {
             payment.setAmount(amount);
             payment.setOrderInfo(params.get("vnp_OrderInfo"));
 
-            if ("00".equals(params.get("vnp_ResponseCode"))) {
-                transaction.setStatus("DONE");
+            // ✅ Update status based on VNPay response
+            String vnpResponseCode = params.get("vnp_ResponseCode");
+            if ("00".equals(vnpResponseCode)) {
+                transaction.setStatus("SUCCESS");  // Changed from "DONE" to "SUCCESS" for consistency
                 payment.setPaymentStatus("COMPLETED");
             } else {
                 transaction.setStatus("FAILED");
                 payment.setPaymentStatus("FAILED");
             }
 
+            // Save to database
             paymentRepository.save(payment);
             transactionRepository.save(transaction);
 
