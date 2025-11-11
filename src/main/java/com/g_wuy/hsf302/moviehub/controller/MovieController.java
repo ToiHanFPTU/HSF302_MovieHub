@@ -31,6 +31,13 @@ public class MovieController {
     @Autowired
     private TicketService ticketService;
 
+    @GetMapping("/home")
+    public String home(Model model) {
+        List<MovieDTO> movies = movieService.getAllMovies();
+        model.addAttribute("movies", movies);
+        return "home";
+    }
+
     @GetMapping("/movies")
     public String listForCustomer(Model model) {
         List<MovieDTO> movies = movieService.getAllMovies();

@@ -21,7 +21,7 @@ public class PaymentController {
     public String showPaymentForm(@PathVariable Integer transactionId, Model model) {
         model.addAttribute("transactionId", transactionId);
         model.addAttribute("vnpRequest", new VNPayRequest());
-        return "payment-form"; // file payment-form.html
+        return "/payment/payment-form";
     }
 
     @PostMapping("/payment/create/{transactionId}")
@@ -35,11 +35,11 @@ public class PaymentController {
                 return "redirect:" + res.getPaymentUrl();
             } else {
                 model.addAttribute("error", res.getMessage());
-                return "error";
+                return "/payment/payment-result";
             }
         } catch (Exception e) {
             model.addAttribute("error", e.getMessage());
-            return "error";
+            return "/payment/payment-result";
         }
     }
 
@@ -49,6 +49,6 @@ public class PaymentController {
                                     Model model) {
         String message = paymentService.handleReturn(params, transactionId);
         model.addAttribute("message", message);
-        return "payment-result"; // file payment-result.html
+        return "/payment/payment-result";
     }
 }
