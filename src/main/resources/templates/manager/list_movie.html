@@ -19,29 +19,7 @@
 <body class="bg-light">
 
 <!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" th:href="@{/movies}">🎥 MovieHub</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div class="collapse navbar-collapse" id="navbarNavDropdown">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item dropdown" th:if="${session.user != null and session.user.role == 'ADMIN'}">
-                    <a class="nav-link dropdown-toggle" href="#" id="adminMenu" role="button" data-bs-toggle="dropdown">
-                        ⚙️ Dashboard
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item" href="/movies/admin">🎬 Manage Movies</a></li>
-                        <li><a class="dropdown-item" href="/admin/users">👤 Manage Users</a></li>
-                        <li><a class="dropdown-item" href="/admin/transactions">💳 Transactions</a></li>
-                    </ul>
-                </li>
-            </ul>
-        </div>
-    </div>
-</nav>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
 
 <!-- Container -->
 <div class="container mt-4">

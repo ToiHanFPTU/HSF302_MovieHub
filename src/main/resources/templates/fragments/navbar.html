@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!-- Navbar Fragment -->
+<nav th:fragment="navbar" class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/movies">🎥 MovieHub</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul class="navbar-nav ms-auto">
+
+                <!-- ADMIN menu -->
+                <li class="nav-item dropdown" th:if="${session.user != null and session.user.role == 'ADMIN'}">
+                    <a class="nav-link dropdown-toggle" href="#" id="adminMenu" role="button" data-bs-toggle="dropdown">
+                        ⚙️ Dashboard
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="/admin/movies">🎬 Manage Movies</a></li>
+                        <li><a class="dropdown-item" href="/admin/categories">📂 Manage Categories</a></li>
+                        <li><a class="dropdown-item" href="/admin/users">👤 Manage Users</a></li>
+                        <li><a class="dropdown-item" href="/admin/transactions">💳 Transactions</a></li>
+                    </ul>
+                </li>
+
+                <!-- USER menu -->
+                <li class="nav-item dropdown" th:if="${session.user != null and session.user.role == 'USER'}">
+                    <a class="nav-link dropdown-toggle" href="#" id="userMenu" role="button" data-bs-toggle="dropdown">
+                        👤 Account
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="/my-tickets">🎟 My Tickets</a></li>
+                        <li><a class="dropdown-item" href="/user/transactions">💳 My Transactions</a></li>
+                        <li><a class="dropdown-item" href="/logout">🚪 Logout</a></li>
+                    </ul>
+                </li>
+
+                <!-- Guest -->
+                <li class="nav-item" th:if="${session.user == null}">
+                    <a class="nav-link" href="/auth/login">🔐 Login</a>
+                </li>
+
+            </ul>
+        </div>
+    </div>
+</nav>
+
+</body>
+</html>
+
