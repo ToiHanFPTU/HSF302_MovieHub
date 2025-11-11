@@ -42,18 +42,9 @@ public class AuthController {
             request.setAttribute("message", "Invalid username or password");
             return "auth/login";
         }
-
-        String url = "";
-        if(user.getRole().equals("Admin")){
-            url = "admin/dashboard  ";
-        } else {
-            url = "redirect:/movies";
-        }
-
         HttpSession session = request.getSession(true);
         session.setAttribute("user", user);
-
-        return url;
+        return "redirect:/movies";
     }
 
     @PostMapping("/auth/register")

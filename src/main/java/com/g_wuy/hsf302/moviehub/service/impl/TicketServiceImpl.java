@@ -95,43 +95,53 @@ public class TicketServiceImpl implements TicketService {
     @Transactional
     public BookTicketsResponse bookTickets(User sessionUser, BookTicketsRequest request, BigDecimal pricePerSeat) {
 
+        // Lấy user từ session
+        User user = userRepository.findUserByEmail(sessionUser.getEmail());
+        if (user == null) throw new RuntimeException("User not found");
+
+        // Lấy showtime
         Showtime showtime = showtimeRepository.findById(request.getShowtimeId())
                 .orElseThrow(() -> new RuntimeException("Showtime not found"));
 
         List<Seat> seats = seatRepository.findAllById(request.getSeatIds());
         if (seats.isEmpty()) throw new RuntimeException("No seats selected");
 
+        // Kiểm tra ghế đã đặt
         for (Seat seat : seats) {
             if (ticketRepository.existsByShowtimeIdAndSeatId(showtime.getId(), seat.getId())) {
                 throw new RuntimeException("Ghế đã được đặt: " + seat.getSeatNumber());
             }
         }
 
-        User user = userRepository.findById(sessionUser.getId())
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
-
-        Transaction transaction = new Transaction();
-        transaction.setUser(user);
-        transaction.setTransactionDate(Instant.now());
-        transaction.setStatus("PENDING");
-        transaction.setPaymentMethod("BANKING");
-        transaction.setTotalAmount(pricePerSeat.multiply(BigDecimal.valueOf(seats.size())));
-        transactionRepository.save(transaction);
-
+        // Tạo vé trước (chưa set transaction)
         List<Ticket> tickets = new ArrayList<>();
+        Instant now = Instant.now();
         for (Seat seat : seats) {
             Ticket ticket = new Ticket();
             ticket.setShowtime(showtime);
             ticket.setSeat(seat);
             ticket.setUser(user);
             ticket.setPrice(pricePerSeat);
-            ticket.setTransaction(transaction);
+            ticket.setBookingTime(now);
             ticketRepository.save(ticket);
             tickets.add(ticket);
         }
 
+        // Tạo transaction và link vào vé
+        Transaction transaction = new Transaction();
+        transaction.setTransactionDate(Instant.now());
+        transaction.setStatus("PENDING");
+        transaction.setPaymentMethod("BANKING");
+        transaction.setTotalAmount(pricePerSeat.multiply(BigDecimal.valueOf(seats.size())));
+        transactionRepository.save(transaction);
 
+        // Cập nhật transaction cho các vé
+        for (Ticket ticket : tickets) {
+            ticket.setTransaction(transaction);
+            ticketRepository.save(ticket);
+        }
+
+        // Tạo response
         BookTicketsResponse resp = new BookTicketsResponse();
         resp.setTransactionId(transaction.getId());
         resp.setTotalAmount(transaction.getTotalAmount());
@@ -147,5 +157,8 @@ public class TicketServiceImpl implements TicketService {
         resp.setTickets(ticketDTOs);
         return resp;
     }
-
+    @Override
+    public List<Ticket> getTicketsByUser(User user) {
+        return ticketRepository.findByUserOrderByBookingTimeDesc(user);
+    }
 }

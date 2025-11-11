@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>My Tickets</title>
+</head>
+<body>
+<h1>Vé đã mua</h1>
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>Phim</th>
+        <th>Ghế</th>
+        <th>Phòng</th>
+        <th>Khung giờ</th>
+        <th>Giá</th>
+        <th>Ngày đặt</th>
+        <th>Transaction ID</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="ticket : ${tickets}">
+        <td th:text="${ticket.showtime.movie.title}">Movie</td>
+        <td th:text="${ticket.seat.seatNumber}">Seat</td>
+        <td th:text="${ticket.seat.room.roomName}">Room</td>
+        <td th:text="${#dates.format(ticket.showtime.startTime,'yyyy-MM-dd HH:mm')}">Start Time</td>
+        <td th:text="${ticket.price}">Price</td>
+        <td th:text="${#dates.format(ticket.bookingTime,'yyyy-MM-dd HH:mm')}">Booking Time</td>
+        <td th:text="${ticket.transaction.id}">Transaction</td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>

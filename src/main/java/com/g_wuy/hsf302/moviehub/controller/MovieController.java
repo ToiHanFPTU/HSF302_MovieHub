@@ -2,6 +2,7 @@ package com.g_wuy.hsf302.moviehub.controller;
 
 
 import com.g_wuy.hsf302.moviehub.entity.Movie;
+import com.g_wuy.hsf302.moviehub.entity.Ticket;
 import com.g_wuy.hsf302.moviehub.entity.User;
 import com.g_wuy.hsf302.moviehub.model.dto.MovieDTO;
 import com.g_wuy.hsf302.moviehub.model.request.BookTicketsRequest;
@@ -115,7 +116,7 @@ public class MovieController {
 
         User sessionUser = (User) session.getAttribute("user");
         if (sessionUser == null) {
-            return "redirect:/login";
+            return "redirect:/auth/login";
         }
 
         BigDecimal pricePerSeat = new BigDecimal("100000");
@@ -123,8 +124,19 @@ public class MovieController {
         BookTicketsResponse resp = ticketService.bookTickets(sessionUser, request, pricePerSeat);
         model.addAttribute("booking", resp);
 
-        return "redirect:/admin/movies";
+        return "redirect:/movies";
     }
 
+    @GetMapping("/my-tickets")
+    public String getMyTickets(HttpSession session, Model model) {
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
+            return "redirect:/auth/login";
+        }
+
+        List<Ticket> tickets = ticketService.getTicketsByUser(user);
+        model.addAttribute("tickets", tickets);
+        return "booking/my_tickets";
+    }
 
 }

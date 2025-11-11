@@ -10,8 +10,6 @@ import org.hibernate.annotations.Nationalized;
 
 import java.math.BigDecimal;
 import java.time.Instant;
-import java.util.LinkedHashSet;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -22,11 +20,6 @@ public class Transaction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "transaction_id", nullable = false)
     private Integer id;
-
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
 
     @NotNull
     @Column(name = "total_amount", nullable = false, precision = 10, scale = 2)
@@ -45,9 +38,5 @@ public class Transaction {
     @Nationalized
     @Column(name = "status", length = 20)
     private String status;
-
-    @OneToMany(mappedBy = "transaction", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Ticket> tickets = new LinkedHashSet<>();
-
 
 }
