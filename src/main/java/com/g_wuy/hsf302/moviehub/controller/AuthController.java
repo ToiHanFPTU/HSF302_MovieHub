@@ -39,7 +39,7 @@ public class AuthController {
         User user = userService.getUserByEmail(email);
         boolean match = password.equals(user.getPasswordHash()) ;
         if (!match) {
-            request.setAttribute("message", "Invalid username or password");
+            request.setAttribute("message", "Invalid email or password");
             return "auth/login";
         }
         HttpSession session = request.getSession(true);
