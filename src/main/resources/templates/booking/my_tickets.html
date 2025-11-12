@@ -4,44 +4,382 @@
     <meta charset="UTF-8">
     <title>My Tickets</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d1b1b 100%);
+            color: #fff;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1000px;
+            padding: 20px;
+        }
+
+        /* Page Header */
+        .page-header {
+            margin: 40px 0 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .page-title {
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: #fff;
+            margin: 0;
+        }
+
+        .ticket-count {
+            background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        /* Ticket Card */
+        .ticket {
+            background: #262626;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 16px;
+            border: 1px solid #333;
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ticket::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(180deg, #ff6b35 0%, #f7931e 100%);
+        }
+
+        .ticket:hover {
+            border-color: #404040;
+            background: #2a2a2a;
+            transform: translateX(4px);
+        }
+
+        /* Ticket Header */
+        .ticket-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #333;
+        }
+
+        .movie-info {
+            flex: 1;
+        }
+
+        .movie-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #fff;
+            margin: 0 0 6px 0;
+        }
+
+        .movie-room {
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        .ticket-status {
+            background: rgba(76, 175, 80, 0.15);
+            color: #4caf50;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            border: 1px solid rgba(76, 175, 80, 0.3);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Ticket Body */
+        .ticket-body {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .ticket-detail {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .detail-label {
+            font-size: 0.75rem;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .detail-value {
+            font-size: 0.95rem;
+            color: #fff;
+            font-weight: 500;
+        }
+
+        .seat-value {
+            display: inline-block;
+            background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+            color: #fff;
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .price-value {
+            color: #4caf50;
+            font-weight: 600;
+            font-size: 1.05rem;
+        }
+
+        .transaction-id {
+            font-family: 'Courier New', monospace;
+            color: #ff6b35;
+            font-size: 0.85rem;
+        }
+
+        /* Ticket Footer */
+        .ticket-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 16px;
+            border-top: 1px solid #333;
+        }
+
+        .booking-date {
+            color: #888;
+            font-size: 0.85rem;
+        }
+
+
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 80px 20px;
+            background: #262626;
+            border-radius: 12px;
+            border: 1px solid #333;
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            color: #444;
+            margin-bottom: 20px;
+        }
+
+        .empty-state h3 {
+            font-size: 1.25rem;
+            color: #888;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .empty-state p {
+            color: #666;
+            margin-bottom: 24px;
+            font-size: 0.95rem;
+        }
+
+        /* Buttons */
+        .btn-primary-custom {
+            background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+            color: #fff;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(255, 107, 53, 0.3);
+            color: #fff;
+        }
+
+        .btn-secondary-custom {
+            background: transparent;
+            color: #888;
+            border: 1px solid #404040;
+            padding: 12px 28px;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 0.95rem;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.2s ease;
+        }
+
+        .btn-secondary-custom:hover {
+            border-color: #666;
+            color: #fff;
+        }
+
+        .action-buttons {
+            margin-top: 32px;
+            text-align: center;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 16px;
+            }
+
+            .page-header {
+                margin: 24px 0 20px;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+
+            .page-title {
+                font-size: 1.5rem;
+            }
+
+            .ticket {
+                padding: 20px;
+            }
+
+            .movie-title {
+                font-size: 1.1rem;
+            }
+
+            .ticket-body {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .ticket-footer {
+                flex-direction: column;
+                gap: 12px;
+                align-items: flex-start;
+            }
+        }
+
+        /* Animation */
+        .ticket {
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
 </head>
-<body class="bg-light">
+<body>
 
 <!-- Navbar -->
 <div th:replace="~{fragments/navbar :: navbar}"></div>
 
-<div class="container mt-4">
-    <h1 class="mb-4">🎟 Vé đã mua</h1>
-
-    <div class="table-responsive">
-        <table class="table table-striped table-hover">
-            <thead class="table-dark">
-            <tr>
-                <th>Phim</th>
-                <th>Ghế</th>
-                <th>Phòng</th>
-                <th>Khung giờ</th>
-                <th>Giá</th>
-                <th>Ngày đặt</th>
-                <th>Transaction ID</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="ticket : ${tickets}">
-                <td th:text="${ticket.showtime.movie.title}">Movie</td>
-                <td th:text="${ticket.seat.seatNumber}">Seat</td>
-                <td th:text="${ticket.seat.room.roomName}">Room</td>
-                <td th:text="${#dates.format(ticket.showtime.startTime,'yyyy-MM-dd HH:mm')}">Start Time</td>
-                <td th:text="${ticket.price}">Price</td>
-                <td th:text="${#dates.format(ticket.bookingTime,'yyyy-MM-dd HH:mm')}">Booking Time</td>
-                <td th:text="${ticket.transaction.id}">Transaction</td>
-            </tr>
-            </tbody>
-        </table>
+<div class="container">
+    <!-- Page Header -->
+    <div class="page-header">
+        <h1 class="page-title">Vé của tôi</h1>
+        <div class="ticket-count" th:if="${tickets != null && !tickets.isEmpty()}">
+            <span th:text="${tickets.size()} + ' vé'">0 vé</span>
+        </div>
     </div>
 
-    <div class="mt-4 text-center">
-        <a href="/movies" class="btn btn-primary">🏠 Back to Movies</a>
+    <!-- Tickets List -->
+    <div th:if="${tickets != null && !tickets.isEmpty()}">
+        <div th:each="ticket : ${tickets}" class="ticket">
+            <!-- Ticket Header -->
+            <div class="ticket-header">
+                <div class="movie-info">
+                    <h3 class="movie-title" th:text="${ticket.showtime.movie.title}">Movie Title</h3>
+                    <div class="movie-room" th:text="${ticket.seat.room.roomName}">Room 1</div>
+                </div>
+                <span class="ticket-status">
+                    <i class="fas fa-check-circle"></i>
+                    Đã xác nhận
+                </span>
+            </div>
+
+            <!-- Ticket Body -->
+            <div class="ticket-body">
+                <div class="ticket-detail">
+                    <span class="detail-label">Ghế</span>
+                    <span class="seat-value" th:text="${ticket.seat.seatNumber}">A12</span>
+                </div>
+
+                <div class="ticket-detail">
+                    <span class="detail-label">Suất chiếu</span>
+                    <span class="detail-value" th:text="${#dates.format(ticket.showtime.startTime,'HH:mm')}">14:30</span>
+                </div>
+
+                <div class="ticket-detail">
+                    <span class="detail-label">Ngày</span>
+                    <span class="detail-value" th:text="${#dates.format(ticket.showtime.startTime,'dd/MM/yyyy')}">12/11/2025</span>
+                </div>
+
+                <div class="ticket-detail">
+                    <span class="detail-label">Giá vé</span>
+                    <span class="price-value" th:text="${ticket.price} + ' VNĐ'">150,000 VNĐ</span>
+                </div>
+
+                <div class="ticket-detail">
+                    <span class="detail-label">Mã giao dịch</span>
+                    <span class="transaction-id" th:text="'#' + ${ticket.transaction.id}">TXN123456</span>
+                </div>
+            </div>
+
+            <!-- Ticket Footer -->
+    </div>
+
+    <!-- Empty State -->
+    <div th:if="${tickets == null || tickets.isEmpty()}" class="empty-state">
+        <i class="fas fa-ticket-alt"></i>
+        <h3>Chưa có vé nào</h3>
+        <p>Bạn chưa đặt vé xem phim. Khám phá các bộ phim đang chiếu nhé!</p>
+        <a href="/movies" class="btn-primary-custom">
+            <i class="fas fa-film"></i> Xem phim ngay
+        </a>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="action-buttons" th:if="${tickets != null && !tickets.isEmpty()}">
+        <a href="/movies" class="btn-secondary-custom">
+            <i class="fas fa-arrow-left"></i> Về trang chủ
+        </a>
     </div>
 </div>
 
