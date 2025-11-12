@@ -82,14 +82,15 @@ public class TicketServiceImpl implements TicketService {
                 .collect(Collectors.toSet());
 
         return allSeats.stream()
-                .filter(s -> !bookedSeatIds.contains(s.getId()))
                 .map(s -> {
                     SeatDTO dto = new SeatDTO();
                     dto.setSeatId(s.getId());
                     dto.setSeatNumber(s.getSeatNumber());
-                    dto.setSeatType(s.getSeatType());
+                    dto.setSeatType(s.getSeatType().toUpperCase());
+                    dto.setBooked(bookedSeatIds.contains(s.getId()));
                     return dto;
                 })
+
                 .collect(Collectors.toList());
     }
     @Transactional
@@ -118,10 +119,10 @@ public class TicketServiceImpl implements TicketService {
         for (Seat seat : seats) {
             BigDecimal price;
 
-            switch (seat.getSeatType().toLowerCase()) {
-                case "vip" -> price = new BigDecimal("150000");
-                case "couple" -> price = new BigDecimal("200000");
-                default -> price = new BigDecimal("100000");
+            switch (seat.getSeatType().toUpperCase()) {
+                case "VIP" -> price = new BigDecimal("120000");
+                case "COUPLE" -> price = new BigDecimal("150000");
+                default -> price = new BigDecimal("80000");
             }
 
             total = total.add(price);
