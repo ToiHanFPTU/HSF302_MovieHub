@@ -119,13 +119,13 @@ public class MovieController {
             return "redirect:/auth/login";
         }
 
-        BigDecimal pricePerSeat = new BigDecimal("100000");
-
-        BookTicketsResponse resp = ticketService.bookTickets(sessionUser, request, pricePerSeat);
+        // Base price chỉ để tham khảo, không cần thiết nữa
+        BookTicketsResponse resp = ticketService.bookTickets(sessionUser, request, BigDecimal.ZERO);
         model.addAttribute("booking", resp);
 
         return "redirect:/movies";
     }
+
 
     @GetMapping("/my-tickets")
     public String getMyTickets(HttpSession session, Model model) {
