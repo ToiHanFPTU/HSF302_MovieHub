@@ -2,281 +2,17 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title th:text="${movieDetail.title}">Movie Detail</title>
+    <title th:text="${movieDetail.title}">Chi tiết phim</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root {
-            --primary-red: #e50914;
-            --dark-bg: #141414;
-            --darker-bg: #0a0a0a;
-            --card-bg: #1f1f1f;
-            --text-primary: #ffffff;
-            --text-secondary: #b3b3b3;
-            --gold-accent: #ffd700;
-        }
-
-        body {
-            background: linear-gradient(135deg, var(--darker-bg) 0%, var(--dark-bg) 100%);
-            color: var(--text-primary);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            min-height: 100vh;
-        }
-
-        .container {
-            max-width: 1200px;
-        }
-
-        /* Movie Poster Section */
-        .poster-wrapper {
-            position: relative;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 20px 60px rgba(229, 9, 20, 0.3);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .poster-wrapper:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 30px 80px rgba(229, 9, 20, 0.5);
-        }
-
-        .poster-wrapper img {
-            width: 100%;
-            height: auto;
-            display: block;
-        }
-
-        .poster-overlay {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 100%);
-            padding: 20px;
-        }
-
-        /* Movie Info Section */
-        .movie-info-card {
-            background: var(--card-bg);
-            border-radius: 15px;
-            padding: 30px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
-        }
-
-        .movie-title {
-            font-size: 2.5rem;
-            font-weight: bold;
-            color: var(--text-primary);
-            margin-bottom: 20px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-        }
-
-        .movie-description {
-            color: var(--text-secondary);
-            font-size: 1.1rem;
-            line-height: 1.8;
-            margin-bottom: 25px;
-            text-align: justify;
-        }
-
-        /* Info Tags */
-        .info-row {
-            display: flex;
-            align-items: center;
-            margin-bottom: 15px;
-            padding: 10px 15px;
-            background: rgba(255,255,255,0.05);
-            border-radius: 8px;
-            transition: background 0.3s ease;
-        }
-
-        .info-row:hover {
-            background: rgba(255,255,255,0.1);
-        }
-
-        .info-icon {
-            color: var(--primary-red);
-            margin-right: 12px;
-            font-size: 1.2rem;
-            width: 25px;
-            text-align: center;
-        }
-
-        .info-label {
-            font-weight: 600;
-            color: var(--gold-accent);
-            margin-right: 10px;
-            min-width: 120px;
-        }
-
-        .info-value {
-            color: var(--text-secondary);
-        }
-
-        /* Category Tags */
-        .category-tag {
-            display: inline-block;
-            background: linear-gradient(135deg, var(--primary-red) 0%, #b20710 100%);
-            color: white;
-            padding: 6px 15px;
-            border-radius: 20px;
-            margin-right: 8px;
-            margin-bottom: 8px;
-            font-size: 0.9rem;
-            font-weight: 500;
-            box-shadow: 0 4px 10px rgba(229, 9, 20, 0.3);
-            transition: transform 0.2s ease;
-        }
-
-        .category-tag:hover {
-            transform: scale(1.05);
-        }
-
-        /* Showtimes Section */
-        .showtimes-section {
-            background: var(--card-bg);
-            border-radius: 15px;
-            padding: 25px;
-            margin-top: 30px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
-        }
-
-        .showtimes-title {
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: var(--gold-accent);
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-        }
-
-        .showtimes-title i {
-            margin-right: 15px;
-            color: var(--primary-red);
-        }
-
-        /* Radio Button Styling */
-        .showtime-option {
-            position: relative;
-            margin-bottom: 15px;
-        }
-
-        .showtime-option input[type="radio"] {
-            position: absolute;
-            opacity: 0;
-            cursor: pointer;
-        }
-
-        .showtime-label {
-            display: flex;
-            align-items: center;
-            padding: 15px 20px;
-            background: rgba(255,255,255,0.05);
-            border: 2px solid transparent;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 1.1rem;
-        }
-
-        .showtime-label:hover {
-            background: rgba(229, 9, 20, 0.1);
-            border-color: var(--primary-red);
-            transform: translateX(10px);
-        }
-
-        .showtime-option input[type="radio"]:checked + .showtime-label {
-            background: linear-gradient(135deg, rgba(229, 9, 20, 0.2) 0%, rgba(229, 9, 20, 0.1) 100%);
-            border-color: var(--primary-red);
-            box-shadow: 0 5px 20px rgba(229, 9, 20, 0.3);
-        }
-
-        .showtime-label::before {
-            content: '';
-            display: inline-block;
-            width: 24px;
-            height: 24px;
-            border: 2px solid var(--text-secondary);
-            border-radius: 50%;
-            margin-right: 15px;
-            transition: all 0.3s ease;
-        }
-
-        .showtime-option input[type="radio"]:checked + .showtime-label::before {
-            border-color: var(--primary-red);
-            background: var(--primary-red);
-            box-shadow: inset 0 0 0 4px var(--card-bg);
-        }
-
-        .time-display {
-            display: flex;
-            align-items: center;
-            color: var(--text-primary);
-            font-weight: 600;
-        }
-
-        .time-display i {
-            color: var(--gold-accent);
-            margin-right: 10px;
-        }
-
-        /* Submit Button */
-        .btn-book-ticket {
-            background: linear-gradient(135deg, var(--primary-red) 0%, #b20710 100%);
-            border: none;
-            color: white;
-            padding: 15px 50px;
-            font-size: 1.2rem;
-            font-weight: bold;
-            border-radius: 50px;
-            margin-top: 20px;
-            box-shadow: 0 10px 30px rgba(229, 9, 20, 0.4);
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .btn-book-ticket:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 40px rgba(229, 9, 20, 0.6);
-            background: linear-gradient(135deg, #ff0a16 0%, var(--primary-red) 100%);
-        }
-
-        .btn-book-ticket:active {
-            transform: translateY(-1px);
-        }
-
-        /* Divider */
-        .section-divider {
-            height: 2px;
-            background: linear-gradient(to right, transparent, var(--primary-red), transparent);
-            margin: 30px 0;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .movie-title {
-                font-size: 1.8rem;
-            }
-
-            .info-label {
-                min-width: 100px;
-                font-size: 0.9rem;
-            }
-
-            .showtimes-title {
-                font-size: 1.5rem;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="/css/movie_detail.css">
 </head>
 <body>
 
 <!-- Navbar -->
 <div th:replace="~{fragments/navbar :: navbar}"></div>
 
-<!-- Movie Detail -->
+<!-- Chi tiết phim -->
 <div class="container mt-5 mb-5">
     <div class="row">
         <!-- Poster -->
@@ -286,47 +22,47 @@
             </div>
         </div>
 
-        <!-- Info -->
+        <!-- Thông tin -->
         <div class="col-md-8">
             <div class="movie-info-card">
-                <h1 class="movie-title" th:text="${movieDetail.title}">Movie Title</h1>
-                <p class="movie-description" th:text="${movieDetail.description}">Movie description...</p>
+                <h1 class="movie-title" th:text="${movieDetail.title}">Tiêu đề phim</h1>
+                <p class="movie-description" th:text="${movieDetail.description}">Mô tả phim...</p>
 
                 <div class="section-divider"></div>
 
                 <div class="info-row">
                     <i class="fas fa-clock info-icon"></i>
-                    <span class="info-label">Duration:</span>
-                    <span class="info-value" th:text="${movieDetail.duration != null ? movieDetail.duration + ' minutes' : 'N/A'}">120 min</span>
+                    <span class="info-label">Thời lượng:</span>
+                    <span class="info-value" th:text="${movieDetail.duration != null ? movieDetail.duration + ' phút' : 'N/A'}">120 phút</span>
                 </div>
 
                 <div class="info-row">
                     <i class="fas fa-language info-icon"></i>
-                    <span class="info-label">Language:</span>
-                    <span class="info-value" th:text="${movieDetail.language != null ? movieDetail.language : 'N/A'}">English</span>
+                    <span class="info-label">Ngôn ngữ:</span>
+                    <span class="info-value" th:text="${movieDetail.language != null ? movieDetail.language : 'N/A'}">Tiếng Anh</span>
                 </div>
 
                 <div class="info-row">
                     <i class="fas fa-calendar-alt info-icon"></i>
-                    <span class="info-label">Release Date:</span>
+                    <span class="info-label">Ngày ra mắt:</span>
                     <span class="info-value" th:text="${movieDetail.releaseDate != null ? movieDetail.releaseDate : 'N/A'}">2024-01-01</span>
                 </div>
 
                 <div class="info-row">
                     <i class="fas fa-film info-icon"></i>
-                    <span class="info-label">Categories:</span>
-                    <span th:if="${movieDetail.categories == null or movieDetail.categories.isEmpty()}" class="info-value">None</span>
+                    <span class="info-label">Thể loại:</span>
+                    <span th:if="${movieDetail.categories == null or movieDetail.categories.isEmpty()}" class="info-value">Không có</span>
                     <div th:unless="${movieDetail.categories == null or movieDetail.categories.isEmpty()}">
-                        <span th:each="cat : ${movieDetail.categories}" class="category-tag" th:text="${cat}">Action</span>
+                        <span th:each="cat : ${movieDetail.categories}" class="category-tag" th:text="${cat}">Hành động</span>
                     </div>
                 </div>
             </div>
 
-            <!-- Showtimes -->
+            <!-- Lịch chiếu -->
             <div class="showtimes-section">
                 <h2 class="showtimes-title">
                     <i class="fas fa-ticket-alt"></i>
-                    Select Showtime
+                    Chọn suất chiếu
                 </h2>
 
                 <form th:action="@{/showtime/choose}" method="get">
@@ -346,7 +82,7 @@
                         </label>
                     </div>
                     <button type="submit" class="btn btn-book-ticket">
-                        <i class="fas fa-chair"></i> Book Seats
+                        <i class="fas fa-chair"></i> Đặt vé
                     </button>
                 </form>
             </div>

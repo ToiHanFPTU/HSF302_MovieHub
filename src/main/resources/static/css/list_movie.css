@@ -1,0 +1,220 @@
+/* Global Styles */
+body {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d1818 50%, #4a1a1a 100%);
+    min-height: 100vh;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #ffffff;
+}
+
+/* Navbar Styles */
+.navbar {
+    background: #1f1f1f !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+    padding: 1rem 0;
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #ffffff !important;
+}
+
+.nav-link {
+    color: #cccccc !important;
+    transition: color 0.3s ease;
+}
+
+.nav-link:hover {
+    color: #ffffff !important;
+}
+
+.dropdown-menu {
+    background-color: #2d2d2d;
+    border: 1px solid #444;
+}
+
+.dropdown-item {
+    color: #cccccc;
+    transition: all 0.3s ease;
+}
+
+.dropdown-item:hover {
+    background-color: #3d3d3d;
+    color: #ffffff;
+}
+
+/* Container Styles */
+.container {
+    max-width: 1400px;
+}
+
+/* Header Section */
+.header-section {
+    background: linear-gradient(90deg, #8b1818 0%, #6d1414 100%);
+    padding: 1.5rem 2rem;
+    border-radius: 10px;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.header-section h2 {
+    margin: 0;
+    color: #ffffff;
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.btn-success {
+    background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);
+    border: none;
+    padding: 0.6rem 1.5rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3);
+}
+
+.btn-success:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(40, 167, 69, 0.5);
+}
+
+/* Movie Card Styles */
+.movie-card-wrapper {
+    transition: transform 0.3s ease;
+}
+
+.movie-card-wrapper:hover {
+    transform: translateY(-5px);
+}
+
+.card {
+    background: #2d2d2d !important;
+    border: 1px solid #3d3d3d !important;
+    border-radius: 12px !important;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6) !important;
+    border-color: #555 !important;
+}
+
+.card-img-top {
+    border-bottom: 3px solid #8b1818;
+    transition: transform 0.3s ease;
+}
+
+.card:hover .card-img-top {
+    transform: scale(1.05);
+}
+
+.card-body {
+    background: #2d2d2d;
+    color: #e0e0e0;
+}
+
+.card-title {
+    color: #ffffff;
+    font-size: 1.4rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    border-bottom: 2px solid #8b1818;
+    padding-bottom: 0.5rem;
+}
+
+.card-text {
+    color: #b0b0b0;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin-bottom: 1rem;
+    min-height: 60px;
+}
+
+.card-body p {
+    margin-bottom: 0.5rem;
+}
+
+.card-body strong {
+    color: #ffc107;
+    font-weight: 600;
+}
+
+/* Category Badge */
+.category-badge {
+    display: inline-block;
+    background: #3d3d3d;
+    color: #ffffff;
+    padding: 0.3rem 0.8rem;
+    border-radius: 15px;
+    margin-right: 0.3rem;
+    margin-bottom: 0.3rem;
+    font-size: 0.85rem;
+    border: 1px solid #555;
+}
+
+/* Button Styles */
+.btn-primary {
+    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+    border: none;
+    padding: 0.5rem 1.2rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #0056b3 0%, #003d82 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 123, 255, 0.4);
+}
+
+.btn-danger {
+    background: linear-gradient(135deg, #dc3545 0%, #a71d2a 100%);
+    border: none;
+    padding: 0.5rem 1.2rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-danger:hover {
+    background: linear-gradient(135deg, #a71d2a 0%, #7d1520 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(220, 53, 69, 0.4);
+}
+
+.btn-sm {
+    font-size: 0.9rem;
+}
+
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .header-section {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .header-section h2 {
+        margin-bottom: 1rem;
+    }
+
+    .card-title {
+        font-size: 1.2rem;
+    }
+}
+
+/* Smooth Scrolling */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Selection Color */
+::selection {
+    background: #8b1818;
+    color: #ffffff;
+}
+
+::-moz-selection {
+    background: #8b1818;
+    color: #ffffff;
+}

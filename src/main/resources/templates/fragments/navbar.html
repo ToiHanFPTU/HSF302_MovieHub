@@ -18,31 +18,30 @@
                 <!-- ADMIN menu -->
                 <li class="nav-item dropdown" th:if="${session.user != null and session.user.role == 'ADMIN'}">
                     <a class="nav-link dropdown-toggle" href="#" id="adminMenu" role="button" data-bs-toggle="dropdown">
-                        ⚙️ Dashboard
+                        ⚙️ Quản trị
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item" href="/admin/movies">🎬 Manage Movies</a></li>
-                        <li><a class="dropdown-item" href="/admin/categories">📂 Manage Categories</a></li>
-                        <li><a class="dropdown-item" href="/admin/users">👤 Manage Users</a></li>
-                        <li><a class="dropdown-item" href="/admin/transactions">💳 Transactions</a></li>
+                        <li><a class="dropdown-item" href="/admin/movies">🎬 Quản lý phim</a></li>
+                        <li><a class="dropdown-item" href="/admin/transactions">💳 Giao dịch</a></li>
+                        <li><a class="dropdown-item" href="/logout">🚪 Đăng xuất</a></li>
                     </ul>
                 </li>
 
                 <!-- USER menu -->
                 <li class="nav-item dropdown" th:if="${session.user != null and session.user.role == 'USER'}">
                     <a class="nav-link dropdown-toggle" href="#" id="userMenu" role="button" data-bs-toggle="dropdown">
-                        👤 Account
+                        👤 Tài khoản
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item" href="/my-tickets">🎟 My Tickets</a></li>
-                        <li><a class="dropdown-item" href="/user/transactions">💳 My Transactions</a></li>
-                        <li><a class="dropdown-item" href="/logout">🚪 Logout</a></li>
+                        <li><a class="dropdown-item" href="/my-tickets">🎟 Vé của tôi</a></li>
+                        <li><a class="dropdown-item" href="/user/transactions">💳 Giao dịch của tôi</a></li>
+                        <li><a class="dropdown-item" href="/logout">🚪 Đăng xuất</a></li>
                     </ul>
                 </li>
 
                 <!-- Guest -->
                 <li class="nav-item" th:if="${session.user == null}">
-                    <a class="nav-link" href="/auth/login">🔐 Login</a>
+                    <a class="nav-link" href="/auth/login">🔐 Đăng nhập</a>
                 </li>
 
             </ul>
@@ -52,4 +51,3 @@
 
 </body>
 </html>
-

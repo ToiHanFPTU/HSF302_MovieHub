@@ -1,0 +1,263 @@
+:root {
+    --primary-red: #e50914;
+    --dark-bg: #141414;
+    --darker-bg: #0a0a0a;
+    --card-bg: #1f1f1f;
+    --text-primary: #ffffff;
+    --text-secondary: #b3b3b3;
+    --gold-accent: #ffd700;
+}
+
+body {
+    background: linear-gradient(135deg, var(--darker-bg) 0%, var(--dark-bg) 100%);
+    color: var(--text-primary);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    min-height: 100vh;
+}
+
+.container {
+    max-width: 1200px;
+}
+
+/* Movie Poster Section */
+.poster-wrapper {
+    position: relative;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(229, 9, 20, 0.3);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.poster-wrapper:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 30px 80px rgba(229, 9, 20, 0.5);
+}
+
+.poster-wrapper img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.poster-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 100%);
+    padding: 20px;
+}
+
+/* Movie Info Section */
+.movie-info-card {
+    background: var(--card-bg);
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+}
+
+.movie-title {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: var(--text-primary);
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+}
+
+.movie-description {
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+    line-height: 1.8;
+    margin-bottom: 25px;
+    text-align: justify;
+}
+
+/* Info Tags */
+.info-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    padding: 10px 15px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 8px;
+    transition: background 0.3s ease;
+}
+
+.info-row:hover {
+    background: rgba(255,255,255,0.1);
+}
+
+.info-icon {
+    color: var(--primary-red);
+    margin-right: 12px;
+    font-size: 1.2rem;
+    width: 25px;
+    text-align: center;
+}
+
+.info-label {
+    font-weight: 600;
+    color: var(--gold-accent);
+    margin-right: 10px;
+    min-width: 120px;
+}
+
+.info-value {
+    color: var(--text-secondary);
+}
+
+/* Category Tags */
+.category-tag {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--primary-red) 0%, #b20710 100%);
+    color: white;
+    padding: 6px 15px;
+    border-radius: 20px;
+    margin-right: 8px;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    box-shadow: 0 4px 10px rgba(229, 9, 20, 0.3);
+    transition: transform 0.2s ease;
+}
+
+.category-tag:hover {
+    transform: scale(1.05);
+}
+
+/* Showtimes Section */
+.showtimes-section {
+    background: var(--card-bg);
+    border-radius: 15px;
+    padding: 25px;
+    margin-top: 30px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+}
+
+.showtimes-title {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: var(--gold-accent);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.showtimes-title i {
+    margin-right: 15px;
+    color: var(--primary-red);
+}
+
+/* Radio Button Styling */
+.showtime-option {
+    position: relative;
+    margin-bottom: 15px;
+}
+
+.showtime-option input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.showtime-label {
+    display: flex;
+    align-items: center;
+    padding: 15px 20px;
+    background: rgba(255,255,255,0.05);
+    border: 2px solid transparent;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1.1rem;
+}
+
+.showtime-label:hover {
+    background: rgba(229, 9, 20, 0.1);
+    border-color: var(--primary-red);
+    transform: translateX(10px);
+}
+
+.showtime-option input[type="radio"]:checked + .showtime-label {
+    background: linear-gradient(135deg, rgba(229, 9, 20, 0.2) 0%, rgba(229, 9, 20, 0.1) 100%);
+    border-color: var(--primary-red);
+    box-shadow: 0 5px 20px rgba(229, 9, 20, 0.3);
+}
+
+.showtime-label::before {
+    content: '';
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    border: 2px solid var(--text-secondary);
+    border-radius: 50%;
+    margin-right: 15px;
+    transition: all 0.3s ease;
+}
+
+.showtime-option input[type="radio"]:checked + .showtime-label::before {
+    border-color: var(--primary-red);
+    background: var(--primary-red);
+    box-shadow: inset 0 0 0 4px var(--card-bg);
+}
+
+.time-display {
+    display: flex;
+    align-items: center;
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+.time-display i {
+    color: var(--gold-accent);
+    margin-right: 10px;
+}
+
+/* Submit Button */
+.btn-book-ticket {
+    background: linear-gradient(135deg, var(--primary-red) 0%, #b20710 100%);
+    border: none;
+    color: white;
+    padding: 15px 50px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    border-radius: 50px;
+    margin-top: 20px;
+    box-shadow: 0 10px 30px rgba(229, 9, 20, 0.4);
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.btn-book-ticket:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 40px rgba(229, 9, 20, 0.6);
+    background: linear-gradient(135deg, #ff0a16 0%, var(--primary-red) 100%);
+}
+
+.btn-book-ticket:active {
+    transform: translateY(-1px);
+}
+
+/* Divider */
+.section-divider {
+    height: 2px;
+    background: linear-gradient(to right, transparent, var(--primary-red), transparent);
+    margin: 30px 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .movie-title {
+        font-size: 1.8rem;
+    }
+
+    .info-label {
+        min-width: 100px;
+        font-size: 0.9rem;
+    }
+
+    .showtimes-title {
+        font-size: 1.5rem;
+    }
+}
