@@ -39,9 +39,4 @@ public class Transaction {
     @Nationalized
     @Column(name = "status", length = 20)
     private String status;
-
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
 }

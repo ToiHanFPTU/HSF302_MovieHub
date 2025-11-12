@@ -367,6 +367,7 @@
                     <th>Phương thức</th>
                     <th>Trạng thái</th>
                     <th>Ngày giao dịch</th>
+                    <th>hành động</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -396,6 +397,11 @@
                     </td>
                     <td>
                         <span class="transaction-date" th:text="${#temporals.format(transaction.transactionDate, 'dd/MM/yyyy HH:mm')}">11/11/2025 10:00</span>
+                    </td>
+                    <td>
+                        <form th:action="@{'/payment/form/' + ${transaction.id} }" method="get">
+                            <button type="submit">Thanh toán</button>
+                        </form>
                     </td>
                 </tr>
                 </tbody>
