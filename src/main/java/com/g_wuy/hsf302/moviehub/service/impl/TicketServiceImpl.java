@@ -133,6 +133,7 @@ public class TicketServiceImpl implements TicketService {
         transaction.setStatus("PENDING");
         transaction.setPaymentMethod("BANKING");
         transaction.setTotalAmount(pricePerSeat.multiply(BigDecimal.valueOf(seats.size())));
+        transaction.setUser(user);
         transactionRepository.save(transaction);
 
         // Cập nhật transaction cho các vé

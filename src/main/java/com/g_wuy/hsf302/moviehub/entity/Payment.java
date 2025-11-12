@@ -15,7 +15,7 @@ import java.time.Instant;
 public class Payment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "paymentid", nullable = false)
+    @Column(name = "payment_id", nullable = false)
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -19,9 +19,8 @@ public class PaymentController {
 
     @GetMapping("/payment/form/{transactionId}")
     public String showPaymentForm(@PathVariable Integer transactionId, Model model) {
-        model.addAttribute("transactionId", transactionId);
-        model.addAttribute("vnpRequest", new VNPayRequest());
-        return "payment-form"; // file payment-form.html
+        model.addAttribute("vnpRequest", paymentService.preparePayment(transactionId));
+        return "payment/payment-form"; // file payment-form.html
     }
 
     @PostMapping("/payment/create/{transactionId}")
@@ -43,13 +42,13 @@ public class PaymentController {
         }
     }
 
-    @GetMapping("/payment/return/{transactionId}")
+    @GetMapping("/api/vnpay/return/{transactionId}")
     public String handleVNPayReturn(@PathVariable Integer transactionId,
                                     @RequestParam Map<String, String> params,
                                     Model model) {
         String message = paymentService.handleReturn(params, transactionId);
         model.addAttribute("message", message);
-        return "payment-result"; // file payment-result.html
+        return "payment/payment-result"; // file payment-result.html
     }
 
 

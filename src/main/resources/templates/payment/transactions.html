@@ -337,7 +337,7 @@
                     <select name="status" id="statusFilter" class="form-select" onchange="this.form.submit()">
                         <option value="">Tất cả trạng thái</option>
                         <option value="PENDING" th:selected="${selectedStatus == 'PENDING'}">Đang xử lý</option>
-                        <option value="COMPLETED" th:selected="${selectedStatus == 'COMPLETED'}">Hoàn thành</option>
+                        <option value="DONE" th:selected="${selectedStatus == 'DONE'}">Hoàn thành</option>
                         <option value="FAILED" th:selected="${selectedStatus == 'FAILED'}">Thất bại</option>
                     </select>
                 </div>

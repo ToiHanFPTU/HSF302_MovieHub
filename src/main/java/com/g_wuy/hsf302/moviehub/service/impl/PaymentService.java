@@ -1,10 +1,12 @@
 package com.g_wuy.hsf302.moviehub.service.impl;
 
+import com.g_wuy.hsf302.moviehub.entity.Movie;
 import com.g_wuy.hsf302.moviehub.entity.Payment;
 import com.g_wuy.hsf302.moviehub.entity.Transaction;
 import com.g_wuy.hsf302.moviehub.infratructure.VNPayConfiguration;
 import com.g_wuy.hsf302.moviehub.model.request.VNPayRequest;
 import com.g_wuy.hsf302.moviehub.model.response.VNPayResponse;
+import com.g_wuy.hsf302.moviehub.repository.MovieRepository;
 import com.g_wuy.hsf302.moviehub.repository.PaymentRepository;
 import com.g_wuy.hsf302.moviehub.repository.TransactionRepository;
 import jakarta.servlet.http.HttpServletRequest;
@@ -32,12 +34,28 @@ public class PaymentService {
     @Autowired
     private PaymentRepository paymentRepository;
 
-    // ✅ Tạo link thanh toán VNPay
+    @Autowired
+    private MovieRepository movieRepository;
+
     public VNPayResponse createPayment(VNPayRequest request, HttpServletRequest httpRequest, Integer transactionId) {
         try {
+            // ✅ Validate dữ liệu
+            if (request.getAmount() == null || request.getAmount() <= 0) {
+                return VNPayResponse.builder()
+                        .code("01")
+                        .message("Số tiền không hợp lệ!")
+                        .build();
+            }
+            if (request.getOrderInfo() == null || request.getOrderInfo().isEmpty()) {
+                return VNPayResponse.builder()
+                        .code("02")
+                        .message("Thông tin đơn hàng bắt buộc!")
+                        .build();
+            }
+
+            // Lấy IP và tạo mã giao dịch VNPay
             String vnp_TxnRef = VNPayConfiguration.getRandomNumber(8);
             String vnp_IpAddr = VNPayConfiguration.getIpAddress(httpRequest);
-
             String returnUrlWithTxn = vnPayConfiguration.getVnpReturnUrl() + "/" + transactionId;
 
             Map<String, String> vnp_Params = new TreeMap<>();
@@ -48,8 +66,8 @@ public class PaymentService {
             vnp_Params.put("vnp_CurrCode", "VND");
             vnp_Params.put("vnp_TxnRef", vnp_TxnRef);
             vnp_Params.put("vnp_OrderInfo", request.getOrderInfo());
-            vnp_Params.put("vnp_OrderType", "other");
-            vnp_Params.put("vnp_Locale", "vn");
+            vnp_Params.put("vnp_OrderType", request.getOrderType() != null ? request.getOrderType() : "other");
+            vnp_Params.put("vnp_Locale", request.getLanguage() != null ? request.getLanguage() : "vn");
             vnp_Params.put("vnp_ReturnUrl", returnUrlWithTxn);
             vnp_Params.put("vnp_IpAddr", vnp_IpAddr);
 
@@ -73,7 +91,7 @@ public class PaymentService {
             String vnp_SecureHash = vnPayConfiguration.hmacSHA512(vnPayConfiguration.getSecretKey(), hashData.toString());
             String paymentUrl = vnPayConfiguration.getVnpPayUrl() + "?" + query + "vnp_SecureHash=" + vnp_SecureHash;
 
-            // 💾 Tạo bản ghi Payment PENDING (để log lại giao dịch khởi tạo)
+            // 💾 Lưu Payment PENDING
             Transaction transaction = transactionRepository.findById(transactionId)
                     .orElseThrow(() -> new RuntimeException("Transaction not found"));
 
@@ -84,6 +102,7 @@ public class PaymentService {
             payment.setPaymentStatus("PENDING");
             payment.setAmount(BigDecimal.valueOf(request.getAmount()));
             payment.setPaymentDate(Instant.now());
+
             paymentRepository.save(payment);
 
             return VNPayResponse.builder()
@@ -118,12 +137,12 @@ public class PaymentService {
 
             BigDecimal amount = new BigDecimal(params.get("vnp_Amount")).divide(BigDecimal.valueOf(100));
             transaction.setTotalAmount(amount);
+            transaction.setTransactionDate(Instant.now());
 
-            Payment payment = paymentRepository.findAll().stream()
-                    .filter(p -> p.getTransaction().equals(transaction))
-                    .reduce((first, second) -> second) // lấy bản ghi gần nhất
-                    .orElse(new Payment());
-
+            Payment payment = new Payment();
+            payment.setTransaction(transaction);
+            payment.setPaymentMethod("VNPAY");
+            payment.setTransactionCode(params.get("vnp_TxnRef"));
             payment.setPaymentDate(Instant.now());
             payment.setVnpTransactionNo(params.get("vnp_TransactionNo"));
             payment.setVnpBankCode(params.get("vnp_BankCode"));
@@ -151,5 +170,19 @@ public class PaymentService {
             e.printStackTrace();
             return "Lỗi xử lý callback: " + e.getMessage();
         }
+    }
+
+    public VNPayRequest preparePayment(Integer transactionId) {
+        Transaction transaction = transactionRepository.findTransactionById(transactionId);
+
+        VNPayRequest request = new VNPayRequest();
+
+        Movie movie = movieRepository.findMoviesByTransactionId(transactionId);
+        long amount = transaction.getTotalAmount().longValue();
+        request.setAmount(amount);
+        request.setOrderInfo("Trả tền cho phim " + movie.getTitle());
+        request.setOrderType("Entertainment");
+        request.setLanguage("vn");
+        return request;
     }
 }
