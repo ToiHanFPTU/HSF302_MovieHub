@@ -8,7 +8,7 @@ import com.g_wuy.hsf302.moviehub.model.dto.MovieDTO;
 import java.util.List;
 
 public interface MovieService {
-    List<MovieDTO> getAllMovies();
+    List<MovieDTO> getAllMovies(String title, Integer categoryId);
     Movie getMovieById(Integer id);
     Movie saveMovieWithCategories(Movie movie, List<Integer> categoryIds);
     Movie updateMovieWithCategories(Movie movie, List<Integer> categoryIds);

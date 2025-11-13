@@ -25,10 +25,38 @@
 <!-- Movie List -->
 <div class="container mt-4">
     <h2 class="text-center mb-4">🎬 Movie List</h2>
+
+    <!-- 🔍 Filter Form -->
+    <form th:action="@{/movies}" method="get" class="row g-3 align-items-end mb-4">
+        <div class="col-md-5">
+            <label for="name" class="form-label">Movie Name</label>
+            <input type="text" id="name" name="name" class="form-control"
+                   placeholder="Enter movie name..."
+                   th:value="${selectedName}">
+        </div>
+
+        <div class="col-md-4">
+            <label for="categoryId" class="form-label">Category</label>
+            <select id="categoryId" name="categoryId" class="form-select">
+                <option value="">-- All Categories --</option>
+                <option th:each="categori : ${allCategories}"
+                        th:value="${categori.id}"
+                        th:text="${categori.categoryName}"
+                        th:selected="${selectedCategoryId != null and selectedCategoryId == categori.id}">
+                </option>
+            </select>
+        </div>
+
+        <div class="col-md-3 d-flex">
+            <button type="submit" class="btn btn-primary me-2">🔍 Filter</button>
+            <a href="/movies" class="btn btn-secondary">🧹 Reset</a>
+        </div>
+    </form>
+
+    <!-- Movie Grid -->
     <div class="row">
         <div class="col-md-4 mb-4" th:each="movie : ${movies}">
             <div class="card shadow-sm h-100">
-                <!-- Link toàn bộ card đến trang chi tiết -->
                 <a th:href="@{/movies/{id}(id=${movie.id})}" style="text-decoration: none; color: inherit;">
                     <img th:src="${movie.imageUrl}" class="card-img-top" th:alt="${movie.title}"
                          style="height: 300px; object-fit: cover;">
