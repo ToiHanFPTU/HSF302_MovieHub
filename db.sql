@@ -176,16 +176,16 @@ GO
 -- MOVIES
 INSERT INTO [dbo].[Movie] (title, description, duration, release_date, language, image_url)
 VALUES
-(N'Avengers: Endgame', N'Thế giới siêu anh hùng chống lại Thanos.', 180, '2019-04-26', N'English', ''),
-(N'Spiderman: No Way Home', N'Peter Parker đối mặt đa vũ trụ.', 150, '2021-12-17', N'English', ''),
-(N'Titanic', N'Câu chuyện tình yêu giữa Jack và Rose.', 195, '1997-12-19', N'English', ''),
-(N'Parasite', N'Một gia đình nghèo thâm nhập vào nhà giàu.', 132, '2019-05-30', N'Korean', ''),
-(N'Inception', N'Giấc mơ trong giấc mơ.', 148, '2010-07-16', N'English', ''),
-(N'Interstellar', N'Hành trình xuyên không gian cứu lấy nhân loại.', 169, '2014-11-07', N'English', ''),
-(N'Frozen', N'Nữ hoàng băng giá Elsa và hành trình tìm bản thân.', 102, '2013-11-27', N'English', ''),
-(N'Joker', N'Câu chuyện về nguồn gốc tên hề tội phạm.', 122, '2019-10-04', N'English', ''),
-(N'Avatar', N'Hành tinh Pandora và người Na’vi.', 162, '2009-12-18', N'English', ''),
-(N'Fast & Furious 9', N'Đua xe, hành động và gia đình.', 145, '2021-06-25', N'English', '');
+(N'Avengers: Endgame', N'Thế giới siêu anh hùng chống lại Thanos.', 180, '2019-04-26', N'English', 'https://th.bing.com/th/id/OIP.CIXxgBXzeAgwrhwTgQPJswHaEK?w=288&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1'),
+(N'Spiderman: No Way Home', N'Peter Parker đối mặt đa vũ trụ.', 150, '2021-12-17', N'English', 'https://th.bing.com/th/id/OIP.oxJ4ufj6SKcwfYED3Gi_cwHaEK?w=324&h=182&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1'),
+(N'Titanic', N'Câu chuyện tình yêu giữa Jack và Rose.', 195, '1997-12-19', N'English', 'https://th.bing.com/th/id/OIP.p-J7-kNChSGp5dbfdLAGkwHaEK?w=295&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1'),
+(N'Parasite', N'Một gia đình nghèo thâm nhập vào nhà giàu.', 132, '2019-05-30', N'Korean', 'https://th.bing.com/th/id/OIP.wu1L6aCFMMF0_Dj7PxgbaQHaJ4?w=126&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1'),
+(N'Inception', N'Giấc mơ trong giấc mơ.', 148, '2010-07-16', N'English', 'https://th.bing.com/th/id/OIP.fFeZPemNOcuwGW_V4l62wQHaEo?w=284&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1'),
+(N'Interstellar', N'Hành trình xuyên không gian cứu lấy nhân loại.', 169, '2014-11-07', N'English', 'https://th.bing.com/th/id/OIP.gx8mMOCrx1nOgwa7e3pZMgHaEK?w=298&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1'),
+(N'Frozen', N'Nữ hoàng băng giá Elsa và hành trình tìm bản thân.', 102, '2013-11-27', N'English', 'https://th.bing.com/th/id/OIP.WhiFHP7IXe5KZ3KkfmoixgHaEK?w=303&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1'),
+(N'Joker', N'Câu chuyện về nguồn gốc tên hề tội phạm.', 122, '2019-10-04', N'English', 'https://th.bing.com/th/id/OIP._p5Hw_qMn1FJFRAmyyCMlAHaEK?w=287&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1'),
+(N'Avatar', N'Hành tinh Pandora và người Na’vi.', 162, '2009-12-18', N'English', 'https://th.bing.com/th/id/OIP.MiTRnWtk0KO8mACSypMDmAHaEK?w=324&h=182&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1'),
+(N'Fast & Furious 9', N'Đua xe, hành động và gia đình.', 145, '2021-06-25', N'English', 'https://th.bing.com/th/id/OIP.LQC9FamuoCdDJGfq3vZMwAHaEK?w=326&h=183&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1');
 GO
 
 -- MOVIE_CATEGORY (ghép ngẫu nhiên)
@@ -202,27 +202,48 @@ VALUES
 GO
 
 -- SEATS (mỗi phòng 60 ghế: 40 Thường, 10 VIP, 10 Couple)
+-- Format: A1-A20 (hàng A), B1-B20 (hàng B), C1-C20 (hàng C)
 DECLARE @room INT = 1;
-DECLARE @i INT;
-DECLARE @seatType NVARCHAR(50);
+DECLARE @row CHAR(1);
+DECLARE @seatNum INT;
+DECLARE @seatCounter INT;
 
 WHILE @room <= 3
 BEGIN
-    SET @i = 1;
+    SET @seatCounter = 1;
 
-    WHILE @i <= 60
+    -- Hàng A, B (Ghế Thường) - 40 ghế
+    SET @row = 'A';
+    WHILE @row <= 'B'
     BEGIN
-        IF @i <= 40
-            SET @seatType = N'Thường';
-        ELSE IF @i <= 50
-            SET @seatType = N'VIP';
-        ELSE
-            SET @seatType = N'Couple';
+        SET @seatNum = 1;
+        WHILE @seatNum <= 20
+        BEGIN
+            INSERT INTO [dbo].[Seat] (room_id, seat_number, seat_type)
+            VALUES (@room, CONCAT(@row, @seatNum), N'Thường');
 
+            SET @seatNum += 1;
+            SET @seatCounter += 1;
+        END
+        SET @row = CHAR(ASCII(@row) + 1);
+    END
+
+    -- Hàng C (10 ghế VIP)
+    SET @seatNum = 1;
+    WHILE @seatNum <= 10
+    BEGIN
         INSERT INTO [dbo].[Seat] (room_id, seat_number, seat_type)
-        VALUES (@room, CONCAT('S', FORMAT(@i,'00')), @seatType);
+        VALUES (@room, CONCAT('C', @seatNum), N'VIP');
+        SET @seatNum += 1;
+    END
 
-        SET @i += 1;
+    -- Hàng D (10 ghế Couple)
+    SET @seatNum = 1;
+    WHILE @seatNum <= 10
+    BEGIN
+        INSERT INTO [dbo].[Seat] (room_id, seat_number, seat_type)
+        VALUES (@room, CONCAT('D', @seatNum), N'Couple');
+        SET @seatNum += 1;
     END
 
     SET @room += 1;
