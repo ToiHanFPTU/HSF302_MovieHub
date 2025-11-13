@@ -42,7 +42,7 @@ public class PaymentController {
         }
     }
 
-    @GetMapping("/api/vnpay/return/{transactionId}")
+    @GetMapping("/vnpay/return/{transactionId}")
     public String handleVNPayReturn(@PathVariable Integer transactionId,
                                     @RequestParam Map<String, String> params,
                                     Model model) {

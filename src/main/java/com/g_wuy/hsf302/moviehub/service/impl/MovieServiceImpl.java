@@ -35,8 +35,9 @@ public class MovieServiceImpl implements MovieService {
     private TicketRepository ticketRepository;
 
     @Override
-    public List<MovieDTO> getAllMovies() {
-        List<Movie> movies = movieRepository.findAll();
+    public List<MovieDTO> getAllMovies(String title, Integer categoryId) {
+        List<Movie> movies = movieRepository.findMovies(title, categoryId);
+
         List<MovieDTO> result = new ArrayList<>();
         for (Movie m : movies) {
             result.add(convertToDTO(m));

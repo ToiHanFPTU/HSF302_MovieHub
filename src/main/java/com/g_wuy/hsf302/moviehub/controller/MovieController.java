@@ -32,17 +32,32 @@ public class MovieController {
     private TicketService ticketService;
 
     @GetMapping("/movies")
-    public String listForCustomer(Model model) {
-        List<MovieDTO> movies = movieService.getAllMovies();
+    public String listForCustomer(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) Integer categoryId,
+            Model model
+    ) {
+        List<MovieDTO> movies = movieService.getAllMovies(name, categoryId);
         model.addAttribute("movies", movies);
+        model.addAttribute("allCategories", categoryService.getAllCategories());
+        model.addAttribute("selectedName", name);
+        model.addAttribute("selectedCategoryId", categoryId);
         return "home";
     }
 
     @GetMapping("/admin/movies")
-    public String listMovies(Model model, HttpSession session) {
+    public String listMovies(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) Integer categoryId,
+            Model model,
+            HttpSession session
+    ) {
         if (!isAdmin(session)) return "error/access_denied";
-        List<MovieDTO> movies = movieService.getAllMovies();
+        List<MovieDTO> movies = movieService.getAllMovies(name, categoryId);
         model.addAttribute("movies", movies);
+        model.addAttribute("allCategories", categoryService.getAllCategories());
+        model.addAttribute("selectedName", name);
+        model.addAttribute("selectedCategoryId", categoryId);
         return "manager/list_movie";
     }
 
