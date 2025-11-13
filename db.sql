@@ -1,8 +1,6 @@
 -- ===============================
 -- DATABASE: CinemaTicketDB_2
 -- ===============================
-CREATE DATABASE CinemaTicketDB_2;
-GO
 USE CinemaTicketDB_2;
 GO
 
@@ -91,6 +89,14 @@ CREATE TABLE [dbo].[Showtime](
     );
 GO
 
+CREATE TABLE [dbo].[Transaction](
+                                    transaction_id INT IDENTITY(1,1) PRIMARY KEY,
+                                    total_amount DECIMAL(10,2) NOT NULL,
+                                    payment_method NVARCHAR(50) NULL,
+                                    transaction_date DATETIME DEFAULT GETDATE(),
+                                    status NVARCHAR(20) NULL
+);
+GO
 -- ===============================
 -- TABLE: Payment
 -- ===============================
@@ -121,14 +127,7 @@ create table Payment
 -- ===============================
 -- TABLE: Transaction (simplified)
 -- ===============================
-CREATE TABLE [dbo].[Transaction](
-                                    transaction_id INT IDENTITY(1,1) PRIMARY KEY,
-    total_amount DECIMAL(10,2) NOT NULL,
-    payment_method NVARCHAR(50) NULL,
-    transaction_date DATETIME DEFAULT GETDATE(),
-    status NVARCHAR(20) NULL
-    );
-GO
+
 
 -- ===============================
 -- TABLE: Ticket
