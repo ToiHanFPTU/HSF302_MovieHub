@@ -1,0 +1,79 @@
+body {
+    background-color: #1b1b1b;
+    color: #f5f5f5;
+    font-family: "Segoe UI", sans-serif;
+    padding: 20px;
+}
+
+h2 {
+    color: orange;
+}
+
+.seat-zone {
+    margin-bottom: 30px;
+}
+
+.seat-zone h3 {
+    color: #ffb84d;
+    margin-bottom: 10px;
+}
+
+.seat-container {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    gap: 8px;
+}
+
+.seat {
+    border: 1px solid #666;
+    background-color: #333;
+    color: white;
+    padding: 8px 0;
+    text-align: center;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.seat:hover {
+    background-color: #555;
+}
+
+.seat.selected {
+    background-color: orange;
+    color: black;
+    font-weight: bold;
+}
+
+.info-box {
+    background: #262626;
+    border-radius: 10px;
+    padding: 15px 20px;
+    margin-top: 30px;
+}
+
+.info-box p {
+    margin: 10px 0;
+    font-size: 1.1em;
+}
+
+.highlight {
+    color: orange;
+    font-weight: bold;
+}
+
+button#confirmBtn {
+    display: block;
+    margin: 30px auto;
+    background-color: orange;
+    color: black;
+    font-weight: bold;
+    padding: 12px 30px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 1.2em;
+}
+
+button#confirmBtn:hover {
+    background-color: #ffcc66;
+}
