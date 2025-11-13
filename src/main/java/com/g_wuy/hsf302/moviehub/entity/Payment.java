@@ -8,6 +8,7 @@ import org.hibernate.annotations.ColumnDefault;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.time.OffsetDateTime;
 
 @Getter
 @Setter
@@ -18,9 +19,20 @@ public class Payment {
     @Column(name = "payment_id", nullable = false)
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "transactionid")
-    private Transaction transaction;
+    @Column(name = "amount", precision = 12, scale = 2)
+    private BigDecimal amount;
+
+    @ColumnDefault("getdate()")
+    @Column(name = "created_at")
+    private OffsetDateTime createdAt;
+
+    @Size(max = 255)
+    @Column(name = "order_info")
+    private String orderInfo;
+
+    @ColumnDefault("sysdatetime()")
+    @Column(name = "paymentdate")
+    private Instant paymentDate;
 
     @Size(max = 50)
     @Column(name = "paymentmethod", length = 50)
@@ -35,13 +47,9 @@ public class Payment {
     @Column(name = "transactioncode", length = 100)
     private String transactionCode;
 
-    @ColumnDefault("sysdatetime()")
-    @Column(name = "paymentdate")
-    private Instant paymentDate;
-
-    @Size(max = 100)
-    @Column(name = "vnp_transaction_no", length = 100)
-    private String vnpTransactionNo;
+    @ColumnDefault("getdate()")
+    @Column(name = "updated_at")
+    private OffsetDateTime updatedAt;
 
     @Size(max = 20)
     @Column(name = "vnp_bank_code", length = 20)
@@ -63,29 +71,12 @@ public class Payment {
     @Column(name = "vnp_response_code", length = 2)
     private String vnpResponseCode;
 
-    @Column(name = "amount", precision = 12, scale = 2)
-    private BigDecimal amount;
+    @Size(max = 100)
+    @Column(name = "vnp_transaction_no", length = 100)
+    private String vnpTransactionNo;
 
-    @Size(max = 255)
-    @Column(name = "order_info")
-    private String orderInfo;
-
-    @ColumnDefault("getdate()")
-    @Column(name = "created_at")
-    private Instant createdAt;
-
-    @ColumnDefault("getdate()")
-    @Column(name = "updated_at")
-    private Instant updatedAt;
-
-    @PrePersist
-    protected void onCreate() {
-        this.createdAt = Instant.now();
-        this.updatedAt = Instant.now();
-    }
-    @PreUpdate
-    protected void onUpdate() {
-        this.updatedAt = Instant.now();
-    }
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "transactionid")
+    private Transaction transaction;
 
 }

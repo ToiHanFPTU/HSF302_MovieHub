@@ -1,125 +1,145 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
 <head>
     <meta charset="UTF-8">
     <title>Chọn ghế</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { background-color: #1b1b1b; color: #f5f5f5; font-family: "Segoe UI", sans-serif; padding: 20px; }
-        h2 { color: orange; }
-        .seat-zone { margin-bottom: 30px; }
-        .seat-zone h3 { color: #ffb84d; margin-bottom: 10px; }
-        .seat-container { display: grid; grid-template-columns: repeat(10, 1fr); gap: 8px; }
-        .seat { border: 1px solid #666; background-color: #333; color: white; padding: 8px 0; text-align: center; border-radius: 8px; cursor: pointer; }
-        .seat:hover { background-color: #555; }
-        .seat.selected { background-color: orange; color: black; font-weight: bold; }
-        .info-box { background: #262626; border-radius: 10px; padding: 15px 20px; margin-top: 30px; }
-        .info-box p { margin: 10px 0; font-size: 1.1em; }
-        .highlight { color: orange; font-weight: bold; }
-        button#confirmBtn { display: block; margin: 30px auto; background-color: orange; color: black; font-weight: bold; padding: 12px 30px; border: none; border-radius: 10px; cursor: pointer; font-size: 1.2em; }
-        button#confirmBtn:hover { background-color: #ffcc66; }
+        body {
+            background: #111;
+            color: #fff;
+            font-family: 'Segoe UI', sans-serif;
+            padding: 20px;
+        }
+        .screen { width: 60%; height: 5px; background: orange; margin: 20px auto; border-radius: 5px; }
+        .seats-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(50px, 1fr)); gap: 8px; justify-items: center; margin-bottom: 15px; }
+        .seat-btn { width: 50px; height: 50px; border-radius: 8px; border: 2px solid #444; background: #222; color: #ccc; cursor: pointer; font-weight: bold; transition: all 0.2s; }
+        .seat-btn:hover:not(.occupied) { border-color: orange; transform: scale(1.05); color: #fff; }
+        .seat-btn.selected { background: orange; border-color: orange; color: #000; }
+        .seat-btn.occupied { background: #333; color: #555; cursor: not-allowed; opacity: 0.6; }
+        .seat-btn.seat-vip { background: #8b0000; border-color: #b22222; color: #fff; }
+        .seat-btn.seat-couple { background: #4b0082; border-color: #8a2be2; color: #fff; }
+        .summary { margin-top: 20px; padding: 15px; background: #222; border-radius: 8px; }
+        .summary span { font-weight: bold; color: orange; }
+        .btn-submit { width: 100%; padding: 12px; background: orange; color: #000; border: none; border-radius: 8px; font-weight: bold; margin-top: 20px; cursor: pointer; }
+        .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+        h5 { margin-top: 20px; color: #ffa500; }
     </style>
 </head>
 <body>
 
-<h2>Chọn ghế xem phim</h2>
+<div class="container">
+    <h3>Chọn ghế ngồi</h3>
+    <div class="screen"></div>
 
-<form id="bookingForm" action="/book" method="post">
-    <input type="hidden" name="showtimeId" value="1" /> <!-- Thay showtimeId hiện tại -->
-    <div class="seat-zone" data-zone="STANDARD" data-price="100000">
-        <h3>Standard (100.000đ)</h3>
-        <div class="seat-container" id="standardSeats"></div>
-    </div>
+    <form th:action="@{/book}" method="post" id="bookingForm">
+        <input type="hidden" name="showtimeId" th:value="${showtimeId}" />
+        <div id="seatInputs"></div>
 
-    <div class="seat-zone" data-zone="VIP" data-price="150000">
-        <h3>VIP (150.000đ)</h3>
-        <div class="seat-container" id="vipSeats"></div>
-    </div>
+        <h5>Ghế Thường (80.000₫)</h5>
+        <div class="seats-grid">
+            <button type="button"
+                    th:each="seat : ${availableSeats}"
+                    th:if="${seat.seatType == 'Thường'}"
+                    class="seat-btn"
+                    th:text="${seat.seatNumber}"
+                    th:data-seat-id="${seat.seatId}"
+                    th:data-seat-type="${seat.seatType}"
+                    th:classappend="${seat.booked} ? ' occupied' : ''"
+                    th:attr="disabled=${seat.booked} ? 'disabled' : null">
+            </button>
+        </div>
 
-    <div class="seat-zone" data-zone="COUPLE" data-price="200000">
-        <h3>Couple (200.000đ)</h3>
-        <div class="seat-container" id="coupleSeats"></div>
-    </div>
+        <!-- KHU GHẾ VIP -->
+        <h5>Ghế VIP (120.000₫)</h5>
+        <div class="seats-grid">
+            <button type="button"
+                    th:each="seat : ${availableSeats}"
+                    th:if="${seat.seatType == 'VIP'}"
+                    class="seat-btn seat-vip"
+                    th:text="${seat.seatNumber}"
+                    th:data-seat-id="${seat.seatId}"
+                    th:data-seat-type="${seat.seatType}"
+                    th:classappend="${seat.booked} ? ' occupied' : ''"
+                    th:attr="disabled=${seat.booked} ? 'disabled' : null">
+            </button>
+        </div>
 
-    <!-- Hidden inputs cho seatIds -->
-    <div id="seatInputs"></div>
+        <!-- KHU GHẾ COUPLE -->
+        <h5>Ghế Couple (150.000₫)</h5>
+        <div class="seats-grid">
+            <button type="button"
+                    th:each="seat : ${availableSeats}"
+                    th:if="${seat.seatType == 'Couple'}"
+                    class="seat-btn seat-couple"
+                    th:text="${seat.seatNumber}"
+                    th:data-seat-id="${seat.seatId}"
+                    th:data-seat-type="${seat.seatType}"
+                    th:classappend="${seat.booked} ? ' occupied' : ''"
+                    th:attr="disabled=${seat.booked} ? 'disabled' : null">
+            </button>
+        </div>
 
-    <div class="info-box">
-        <p><strong>Ghế đã chọn:</strong> <span id="selectedSeats">Chưa chọn</span></p>
-        <p><strong>Số lượng:</strong> <span id="seatCount" class="highlight">0</span></p>
-        <p><strong>Tổng tiền:</strong> <span id="totalPrice" class="highlight">0 VNĐ</span></p>
-    </div>
+        <div class="summary">
+            <p>Ghế đã chọn: <span id="selectedSeats">Chưa chọn</span></p>
+            <p>Số lượng: <span id="seatCount">0</span></p>
+            <p>Tổng tiền: <span id="totalAmount">0₫</span></p>
+        </div>
 
-    <button type="submit" id="confirmBtn">Xác nhận đặt vé</button>
-</form>
+        <button type="submit" class="btn-submit" id="submitBtn" disabled>Đặt vé ngay</button>
+    </form>
+</div>
 
 <script>
-    // Tạm thời map seat_number -> seat_id (lấy từ DB)
-    const seatMap = {
-        "S01":1,"S02":2,"S03":3,"S04":4,"S05":5,"S06":6,"S07":7,"S08":8,"S09":9,"S10":10,
-        "S11":11,"S12":12,"S13":13,"S14":14,"S15":15,"S16":16,"S17":17,"S18":18,"S19":19,"S20":20,
-        "S21":21,"S22":22,"S23":23,"S24":24,"S25":25,"S26":26,"S27":27,"S28":28,"S29":29,"S30":30,
-        "S31":31,"S32":32,"S33":33,"S34":34,"S35":35,"S36":36,"S37":37,"S38":38,"S39":39,"S40":40,
-        "V01":41,"V02":42,"V03":43,"V04":44,"V05":45,"V06":46,"V07":47,"V08":48,"V09":49,"V10":50,
-        "C01":51,"C02":52,"C03":53,"C04":54,"C05":55,"C06":56,"C07":57,"C08":58,"C09":59,"C10":60
-    };
-
+    const PRICES = { Thường : 80000, VIP: 120000, Couple: 150000 };
     const selectedSeats = [];
+    const seatInputsDiv = document.getElementById('seatInputs');
+    const selectedSeatsDisplay = document.getElementById('selectedSeats');
+    const seatCountDisplay = document.getElementById('seatCount');
+    const totalAmountDisplay = document.getElementById('totalAmount');
+    const submitBtn = document.getElementById('submitBtn');
 
-    // Tạo ghế động
-    function createSeats(containerId, prefix, count) {
-        const container = document.getElementById(containerId);
-        for(let i=1;i<=count;i++){
-            const seatNum = prefix + i.toString().padStart(2,'0');
-            const btn = document.createElement('button');
-            btn.type = 'button';
-            btn.className = 'seat';
-            btn.dataset.seat = seatNum;
-            btn.innerText = seatNum;
-            container.appendChild(btn);
+    document.querySelectorAll('.seat-btn:not(.occupied)').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const seatId = btn.getAttribute('data-seat-id');
+            const seatNumber = btn.textContent.trim();
+            const seatType = btn.getAttribute('data-seat-type');
 
-            btn.addEventListener('click', () => {
-                if(btn.classList.toggle('selected')){
-                    selectedSeats.push(seatNum);
-                } else {
-                    const idx = selectedSeats.indexOf(seatNum);
-                    if(idx>-1) selectedSeats.splice(idx,1);
-                }
-                updateSummary();
-            });
-        }
-    }
+            btn.classList.toggle('selected');
 
-    createSeats('standardSeats','S',40);
-    createSeats('vipSeats','V',10);
-    createSeats('coupleSeats','C',10);
+            if(btn.classList.contains('selected')) {
+                selectedSeats.push({ id: seatId, number: seatNumber, type: seatType });
+            } else {
+                const idx = selectedSeats.findIndex(s => s.id === seatId);
+                if(idx > -1) selectedSeats.splice(idx,1);
+            }
 
-    function updateSummary(){
-        document.getElementById('selectedSeats').innerHTML = selectedSeats.join(', ') || 'Chưa chọn';
-        document.getElementById('seatCount').innerText = selectedSeats.length;
-
-        let total = 0;
-        selectedSeats.forEach(seat=>{
-            if(seat.startsWith('S')) total+=100000;
-            else if(seat.startsWith('V')) total+=150000;
-            else total+=200000;
+            updateSummary();
         });
-        document.getElementById('totalPrice').innerText = total.toLocaleString('vi-VN')+' VNĐ';
+    });
 
-        // Cập nhật hidden inputs seatIds
-        const seatInputsDiv = document.getElementById('seatInputs');
+    function updateSummary() {
+        selectedSeatsDisplay.textContent = selectedSeats.length ? selectedSeats.map(s => s.number).join(', ') : 'Chưa chọn';
+        seatCountDisplay.textContent = selectedSeats.length;
+
+        let total = selectedSeats.reduce((sum, s) => sum + PRICES[s.type], 0);
+        totalAmountDisplay.textContent = total.toLocaleString('vi-VN') + '₫';
+
         seatInputsDiv.innerHTML = '';
-        selectedSeats.forEach(seat=>{
+        selectedSeats.forEach(s => {
             const input = document.createElement('input');
-            input.type='hidden';
-            input.name='seatIds';
-            input.value = seatMap[seat];
+            input.type = 'hidden';
+            input.name = 'seatIds';
+            input.value = s.id;
             seatInputsDiv.appendChild(input);
         });
+
+        submitBtn.disabled = selectedSeats.length === 0;
     }
 
-    // Form submit validation
-    document.getElementById('bookingForm').addEventListener('submit', function(e){
-        if(selectedSeats.length===0){
+    document.getElementById('bookingForm').addEventListener('submit', e => {
+        if(selectedSeats.length === 0) {
             e.preventDefault();
             alert('Vui lòng chọn ít nhất 1 ghế!');
         }

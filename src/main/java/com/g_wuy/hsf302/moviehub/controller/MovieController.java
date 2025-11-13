@@ -119,7 +119,6 @@ public class MovieController {
             return "redirect:/auth/login";
         }
 
-        // Base price chỉ để tham khảo, không cần thiết nữa
         BookTicketsResponse resp = ticketService.bookTickets(sessionUser, request, BigDecimal.ZERO);
         model.addAttribute("booking", resp);
 

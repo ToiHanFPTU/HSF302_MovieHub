@@ -367,6 +367,7 @@
                     <th>Phương thức</th>
                     <th>Trạng thái</th>
                     <th>Ngày giao dịch</th>
+                    <th>hành động</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -386,17 +387,22 @@
                     <td>
                             <span th:class="'status-badge ' +
                                 (${transaction.status == 'PENDING'} ? 'status-pending' :
-                                (${transaction.status == 'COMPLETED'} ? 'status-completed' : 'status-failed'))">
+                                (${transaction.status == 'DONE'} ? 'status-completed' : 'status-failed'))">
                                 <i th:class="'fas ' +
                                     (${transaction.status == 'PENDING'} ? 'fa-clock' :
-                                    (${transaction.status == 'COMPLETED'} ? 'fa-check-circle' : 'fa-times-circle'))"></i>
+                                    (${transaction.status == 'DONE'} ? 'fa-check-circle' : 'fa-times-circle'))"></i>
                                 <span th:text="${transaction.status == 'PENDING'} ? 'Đang xử lý' :
-                                    (${transaction.status == 'COMPLETED'} ? 'Hoàn thành' : 'Thất bại')">Đang xử lý</span>
+                                    (${transaction.status == 'DONE'} ? 'Hoàn thành' : 'Thất bại')">Đang xử lý</span>
                             </span>
                     </td>
                     <td>
                         <span class="transaction-date" th:text="${#temporals.format(transaction.transactionDate, 'dd/MM/yyyy HH:mm')}">11/11/2025 10:00</span>
                     </td>
+                    <td>
+                        <form th:action="@{'/payment/form/' + ${transaction.id} }" method="get">
+                            <button type="submit">Thanh toán</button>
+                        </form>
+                        </td>
                 </tr>
                 </tbody>
             </table>

@@ -86,7 +86,7 @@ public class TicketServiceImpl implements TicketService {
                     SeatDTO dto = new SeatDTO();
                     dto.setSeatId(s.getId());
                     dto.setSeatNumber(s.getSeatNumber());
-                    dto.setSeatType(s.getSeatType().toUpperCase());
+                    dto.setSeatType(s.getSeatType());
                     dto.setBooked(bookedSeatIds.contains(s.getId()));
                     return dto;
                 })
@@ -95,7 +95,6 @@ public class TicketServiceImpl implements TicketService {
     }
     @Transactional
     public BookTicketsResponse bookTickets(User sessionUser, BookTicketsRequest request, BigDecimal basePrice) {
-
         User user = userRepository.findUserByEmail(sessionUser.getEmail());
         if (user == null) throw new RuntimeException("User not found");
 
@@ -111,14 +110,12 @@ public class TicketServiceImpl implements TicketService {
             }
         }
 
-        List<Ticket> tickets = new ArrayList<>();
-        Instant now = Instant.now();
-
         BigDecimal total = BigDecimal.ZERO;
+        Instant now = Instant.now();
+        List<Ticket> tickets = new ArrayList<>();
 
         for (Seat seat : seats) {
             BigDecimal price;
-
             switch (seat.getSeatType().toUpperCase()) {
                 case "VIP" -> price = new BigDecimal("120000");
                 case "COUPLE" -> price = new BigDecimal("150000");
@@ -138,7 +135,7 @@ public class TicketServiceImpl implements TicketService {
         }
 
         Transaction transaction = new Transaction();
-        transaction.setTransactionDate(Instant.now());
+        transaction.setTransactionDate(now);
         transaction.setStatus("PENDING");
         transaction.setPaymentMethod("BANKING");
         transaction.setTotalAmount(total);
@@ -151,7 +148,7 @@ public class TicketServiceImpl implements TicketService {
 
         BookTicketsResponse resp = new BookTicketsResponse();
         resp.setTransactionId(transaction.getId());
-        resp.setTotalAmount(transaction.getTotalAmount());
+        resp.setTotalAmount(total);
 
         List<TicketDTO> ticketDTOs = tickets.stream().map(t -> {
             TicketDTO dto = new TicketDTO();
@@ -164,6 +161,7 @@ public class TicketServiceImpl implements TicketService {
         resp.setTickets(ticketDTOs);
         return resp;
     }
+
 
     @Override
     public List<Ticket> getTicketsByUser(User user) {

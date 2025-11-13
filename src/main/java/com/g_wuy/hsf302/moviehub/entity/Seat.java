@@ -7,6 +7,9 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Nationalized;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 @Getter
 @Setter
 @Entity
@@ -31,5 +34,9 @@ public class Seat {
     @Nationalized
     @Column(name = "seat_type", length = 50)
     private String seatType;
+
+    @OneToMany
+    @JoinColumn(name = "seat_id")
+    private Set<Ticket> tickets = new LinkedHashSet<>();
 
 }
