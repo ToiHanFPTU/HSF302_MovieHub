@@ -12,16 +12,151 @@
             font-family: 'Segoe UI', sans-serif;
             padding: 20px;
         }
-        .screen { width: 60%; height: 5px; background: orange; margin: 20px auto; border-radius: 5px; }
-        .seats-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(50px, 1fr)); gap: 8px; justify-items: center; margin-bottom: 15px; }
-        .seat-btn { width: 50px; height: 50px; border-radius: 8px; border: 2px solid #444; background: #222; color: #ccc; cursor: pointer; font-weight: bold; transition: all 0.2s; }
-        .seat-btn:hover:not(.occupied) { border-color: orange; transform: scale(1.05); color: #fff; }
-        .seat-btn.selected { background: orange; border-color: orange; color: #000; }
-        .seat-btn.occupied { background: #333; color: #555; cursor: not-allowed; opacity: 0.6; }
-        .seat-btn.seat-vip { background: #8b0000; border-color: #b22222; color: #fff; }
-        .seat-btn.seat-couple { background: #4b0082; border-color: #8a2be2; color: #fff; }
+        .screen {
+            width: 80%;
+            height: 8px;
+            background: linear-gradient(to bottom, orange, #ff6600);
+            margin: 20px auto 40px;
+            border-radius: 50% 50% 0 0;
+            box-shadow: 0 0 20px rgba(255, 165, 0, 0.5);
+            position: relative;
+        }
+        .screen::before {
+            content: "MÀN HÌNH";
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #ffa500;
+            font-size: 14px;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+        .theater-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .seat-section {
+            margin-bottom: 30px;
+        }
+        .seat-row {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 8px;
+            align-items: center;
+        }
+        .seat-row-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .seats-container {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+        }
+        .row-label {
+            width: 30px;
+            text-align: center;
+            color: #ffa500;
+            font-weight: bold;
+            margin-right: 10px;
+            flex-shrink: 0;
+        }
+        .seat-btn {
+            width: 45px;
+            height: 45px;
+            border-radius: 8px 8px 2px 2px;
+            border: 2px solid #444;
+            background: #2a2a2a;
+            color: #ccc;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 11px;
+            transition: all 0.2s;
+        }
+        .seat-btn:hover:not(.occupied) {
+            border-color: orange;
+            transform: scale(1.1);
+            color: #fff;
+            box-shadow: 0 0 10px rgba(255, 165, 0, 0.5);
+        }
+        .seat-btn.selected {
+            background: orange;
+            border-color: orange;
+            color: #000;
+            transform: scale(1.05);
+        }
+        .seat-btn.occupied {
+            background: #1a1a1a;
+            color: #555;
+            cursor: not-allowed;
+            opacity: 0.4;
+        }
+        .seat-btn.seat-vip {
+            background: #8b0000;
+            border-color: #b22222;
+            color: #fff;
+        }
+        .seat-btn.seat-vip.selected {
+            background: #ff4444;
+            border-color: #ff0000;
+            color: #000;
+        }
+        .seat-btn.seat-couple {
+            background: #4b0082;
+            border-color: #8a2be2;
+            color: #fff;
+            width: 95px;
+        }
+        .seat-btn.seat-couple.selected {
+            background: #9370db;
+            border-color: #ba55d3;
+            color: #000;
+        }
+        .section-divider {
+            height: 1px;
+            background: #444;
+            margin: 20px 0;
+        }
         .summary { margin-top: 20px; padding: 15px; background: #222; border-radius: 8px; }
         .summary span { font-weight: bold; color: orange; }
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 20px 0;
+            padding: 15px;
+            background: #1a1a1a;
+            border-radius: 8px;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .legend-box {
+            width: 35px;
+            height: 35px;
+            border-radius: 6px;
+            border: 2px solid;
+        }
+        .legend-normal { background: #2a2a2a; border-color: #444; }
+        .legend-vip { background: #8b0000; border-color: #b22222; }
+        .legend-couple { background: #4b0082; border-color: #8a2be2; }
+        .legend-occupied { background: #1a1a1a; border-color: #333; opacity: 0.4; }
+        .legend-selected { background: orange; border-color: orange; }
+        .section-title {
+            text-align: center;
+            color: #ffa500;
+            font-size: 16px;
+            font-weight: bold;
+            margin: 25px 0 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
         .btn-submit { width: 100%; padding: 12px; background: orange; color: #000; border: none; border-radius: 8px; font-weight: bold; margin-top: 20px; cursor: pointer; }
         .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }
         h5 { margin-top: 20px; color: #ffa500; }
@@ -30,55 +165,54 @@
 <body>
 
 <div class="container">
-    <h3>Chọn ghế ngồi</h3>
+    <h3 class="text-center mb-4">Chọn ghế ngồi</h3>
+
+    <!-- Legend -->
+    <div class="legend">
+        <div class="legend-item">
+            <div class="legend-box legend-normal"></div>
+            <span>Thường (80K)</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-box legend-vip"></div>
+            <span>VIP (120K)</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-box legend-couple"></div>
+            <span>Couple (150K)</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-box legend-occupied"></div>
+            <span>Đã đặt</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-box legend-selected"></div>
+            <span>Đang chọn</span>
+        </div>
+    </div>
+
     <div class="screen"></div>
 
     <form th:action="@{/book}" method="post" id="bookingForm">
         <input type="hidden" name="showtimeId" th:value="${showtimeId}" />
         <div id="seatInputs"></div>
 
-        <h5>Ghế Thường (80.000₫)</h5>
-        <div class="seats-grid">
-            <button type="button"
-                    th:each="seat : ${availableSeats}"
-                    th:if="${seat.seatType == 'Thường'}"
-                    class="seat-btn"
-                    th:text="${seat.seatNumber}"
-                    th:data-seat-id="${seat.seatId}"
-                    th:data-seat-type="${seat.seatType}"
-                    th:classappend="${seat.booked} ? ' occupied' : ''"
-                    th:attr="disabled=${seat.booked} ? 'disabled' : null">
-            </button>
-        </div>
+        <div class="theater-container">
+            <!-- Ghế Thường -->
+            <div class="section-title">Ghế Thường</div>
+            <div class="seat-section" id="normalSeats"></div>
 
-        <!-- KHU GHẾ VIP -->
-        <h5>Ghế VIP (120.000₫)</h5>
-        <div class="seats-grid">
-            <button type="button"
-                    th:each="seat : ${availableSeats}"
-                    th:if="${seat.seatType == 'VIP'}"
-                    class="seat-btn seat-vip"
-                    th:text="${seat.seatNumber}"
-                    th:data-seat-id="${seat.seatId}"
-                    th:data-seat-type="${seat.seatType}"
-                    th:classappend="${seat.booked} ? ' occupied' : ''"
-                    th:attr="disabled=${seat.booked} ? 'disabled' : null">
-            </button>
-        </div>
+            <div class="section-divider"></div>
 
-        <!-- KHU GHẾ COUPLE -->
-        <h5>Ghế Couple (150.000₫)</h5>
-        <div class="seats-grid">
-            <button type="button"
-                    th:each="seat : ${availableSeats}"
-                    th:if="${seat.seatType == 'Couple'}"
-                    class="seat-btn seat-couple"
-                    th:text="${seat.seatNumber}"
-                    th:data-seat-id="${seat.seatId}"
-                    th:data-seat-type="${seat.seatType}"
-                    th:classappend="${seat.booked} ? ' occupied' : ''"
-                    th:attr="disabled=${seat.booked} ? 'disabled' : null">
-            </button>
+            <!-- Ghế VIP -->
+            <div class="section-title">Ghế VIP</div>
+            <div class="seat-section" id="vipSeats"></div>
+
+            <div class="section-divider"></div>
+
+            <!-- Ghế Couple -->
+            <div class="section-title">Ghế Couple</div>
+            <div class="seat-section" id="coupleSeats"></div>
         </div>
 
         <div class="summary">
@@ -91,8 +225,9 @@
     </form>
 </div>
 
-<script>
-    const PRICES = { Thường : 80000, VIP: 120000, Couple: 150000 };
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    const PRICES = { 'Thường': 80000, 'VIP': 120000, 'Couple': 150000 };
     const selectedSeats = [];
     const seatInputsDiv = document.getElementById('seatInputs');
     const selectedSeatsDisplay = document.getElementById('selectedSeats');
@@ -100,25 +235,108 @@
     const totalAmountDisplay = document.getElementById('totalAmount');
     const submitBtn = document.getElementById('submitBtn');
 
-    document.querySelectorAll('.seat-btn:not(.occupied)').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const seatId = btn.getAttribute('data-seat-id');
-            const seatNumber = btn.textContent.trim();
-            const seatType = btn.getAttribute('data-seat-type');
+    // Lấy dữ liệu ghế từ server
+    const availableSeats = /*[[${availableSeats}]]*/ [];
 
-            btn.classList.toggle('selected');
+    const MAX_SEATS_PER_ROW = 20;
 
-            if(btn.classList.contains('selected')) {
-                selectedSeats.push({ id: seatId, number: seatNumber, type: seatType });
-            } else {
-                const idx = selectedSeats.findIndex(s => s.id === seatId);
-                if(idx > -1) selectedSeats.splice(idx,1);
-            }
+    // Sắp xếp ghế theo hàng và cột
+    function organizeSeatsByType(seats, seatType) {
+        const filteredSeats = seats.filter(s => s.seatType === seatType);
+        const rows = {};
 
-            updateSummary();
+        filteredSeats.forEach(seat => {
+            // Lấy ký tự hàng (A, B, C, D...)
+            const row = seat.seatNumber.match(/^[A-Z]+/)[0];
+            if (!rows[row]) rows[row] = [];
+            rows[row].push(seat);
         });
-    });
 
+        // Sắp xếp theo số ghế trong mỗi hàng
+        Object.keys(rows).forEach(row => {
+            rows[row].sort((a, b) => {
+                // Lấy số từ seat number (A1 -> 1, A20 -> 20)
+                const numA = parseInt(a.seatNumber.match(/\d+$/)[0]);
+                const numB = parseInt(b.seatNumber.match(/\d+$/)[0]);
+                return numA - numB;
+            });
+        });
+
+        return rows;
+    }
+
+    // Render ghế theo hàng
+    function renderSeats(containerSelector, seatType) {
+        const container = document.querySelector(containerSelector);
+        const rows = organizeSeatsByType(availableSeats, seatType);
+
+        Object.keys(rows).sort().forEach(rowLabel => {
+            const allSeats = rows[rowLabel];
+
+            // Chia ghế thành các hàng con nếu vượt quá MAX_SEATS_PER_ROW
+            for (let i = 0; i < allSeats.length; i += MAX_SEATS_PER_ROW) {
+                const seatsInThisRow = allSeats.slice(i, i + MAX_SEATS_PER_ROW);
+
+                const rowWrapper = document.createElement('div');
+                rowWrapper.className = 'seat-row-wrapper';
+
+                // Label hàng (chỉ hiển thị cho hàng con đầu tiên)
+                const label = document.createElement('div');
+                label.className = 'row-label';
+                label.textContent = i === 0 ? rowLabel : '';
+                rowWrapper.appendChild(label);
+
+                // Container cho các ghế
+                const seatsContainer = document.createElement('div');
+                seatsContainer.className = 'seats-container';
+
+                // Các ghế trong hàng
+                seatsInThisRow.forEach(seat => {
+                    const btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.className = 'seat-btn';
+                    if (seatType === 'VIP') btn.classList.add('seat-vip');
+                    if (seatType === 'Couple') btn.classList.add('seat-couple');
+                    if (seat.booked) btn.classList.add('occupied');
+
+                    btn.textContent = seat.seatNumber;
+                    btn.setAttribute('data-seat-id', seat.seatId);
+                    btn.setAttribute('data-seat-type', seat.seatType);
+
+                    if (seat.booked) {
+                        btn.disabled = true;
+                    } else {
+                        btn.addEventListener('click', () => toggleSeat(btn, seat));
+                    }
+
+                    seatsContainer.appendChild(btn);
+                });
+
+                rowWrapper.appendChild(seatsContainer);
+                container.appendChild(rowWrapper);
+            }
+        });
+    }
+
+    // Toggle chọn ghế
+    function toggleSeat(btn, seat) {
+        const seatId = seat.seatId.toString();
+        const seatNumber = seat.seatNumber;
+        const seatType = seat.seatType;
+
+        btn.classList.toggle('selected');
+
+        if (btn.classList.contains('selected')) {
+            selectedSeats.push({ id: seatId, number: seatNumber, type: seatType });
+        } else {
+            const idx = selectedSeats.findIndex(s => s.id === seatId);
+            if (idx > -1) selectedSeats.splice(idx, 1);
+        }
+
+        updateSummary();
+    }
+
+    // Cập nhật thông tin tổng kết
     function updateSummary() {
         selectedSeatsDisplay.textContent = selectedSeats.length ? selectedSeats.map(s => s.number).join(', ') : 'Chưa chọn';
         seatCountDisplay.textContent = selectedSeats.length;
@@ -138,12 +356,19 @@
         submitBtn.disabled = selectedSeats.length === 0;
     }
 
+    // Render tất cả các loại ghế
+    renderSeats('#normalSeats', 'Thường');
+    renderSeats('#vipSeats', 'VIP');
+    renderSeats('#coupleSeats', 'Couple');
+
+    // Xử lý submit form
     document.getElementById('bookingForm').addEventListener('submit', e => {
-        if(selectedSeats.length === 0) {
+        if (selectedSeats.length === 0) {
             e.preventDefault();
             alert('Vui lòng chọn ít nhất 1 ghế!');
         }
     });
+    /*]]>*/
 </script>
 
 </body>
