@@ -5,9 +5,13 @@ import com.g_wuy.hsf302.moviehub.entity.Category;
 import com.g_wuy.hsf302.moviehub.entity.Movie;
 import com.g_wuy.hsf302.moviehub.entity.MovieCategory;
 import com.g_wuy.hsf302.moviehub.entity.MovieCategoryId;
+import com.g_wuy.hsf302.moviehub.entity.Showtime;
+import com.g_wuy.hsf302.moviehub.entity.Ticket;
 import com.g_wuy.hsf302.moviehub.model.dto.MovieDTO;
 import com.g_wuy.hsf302.moviehub.repository.CategoryRepository;
 import com.g_wuy.hsf302.moviehub.repository.MovieRepository;
+import com.g_wuy.hsf302.moviehub.repository.ShowtimeRepository;
+import com.g_wuy.hsf302.moviehub.repository.TicketRepository;
 import com.g_wuy.hsf302.moviehub.service.MovieService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +27,12 @@ public class MovieServiceImpl implements MovieService {
 
     @Autowired
     private CategoryRepository categoryRepository;
+
+    @Autowired
+    private ShowtimeRepository showtimeRepository;
+
+    @Autowired
+    private TicketRepository ticketRepository;
 
     @Override
     public List<MovieDTO> getAllMovies() {
@@ -95,7 +105,30 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
+    @Transactional
     public void deleteMovie(Integer id) {
+        Movie movie = movieRepository.findById(id).orElse(null);
+        if (movie == null) {
+            return;
+        }
+
+        // Get all showtimes for this movie
+        List<Showtime> showtimes = showtimeRepository.findByMovieIdOrderByStartTime(id);
+
+        // For each showtime, delete associated tickets first
+        for (Showtime showtime : showtimes) {
+            List<Ticket> tickets = ticketRepository.findByShowtimeId(showtime.getId());
+            if (!tickets.isEmpty()) {
+                ticketRepository.deleteAll(tickets);
+            }
+        }
+
+        // Now delete the showtimes
+        if (!showtimes.isEmpty()) {
+            showtimeRepository.deleteAll(showtimes);
+        }
+
+        // Finally delete the movie (movieCategories will be cascade deleted)
         movieRepository.deleteById(id);
     }
 

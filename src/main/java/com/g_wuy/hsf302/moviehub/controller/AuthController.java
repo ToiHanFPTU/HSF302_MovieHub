@@ -37,11 +37,21 @@ public class AuthController {
                            @RequestParam("password") String password,
                            HttpServletRequest request) {
         User user = userService.getUserByEmail(email);
-        boolean match = password.equals(user.getPasswordHash()) ;
+
+        // Check if user exists
+        if (user == null) {
+            request.setAttribute("message", "Invalid email or password");
+            return "auth/login";
+        }
+
+        // Check password
+        boolean match = password.equals(user.getPasswordHash());
         if (!match) {
             request.setAttribute("message", "Invalid email or password");
             return "auth/login";
         }
+
+        // Login successful
         HttpSession session = request.getSession(true);
         session.setAttribute("user", user);
         return "redirect:/movies";

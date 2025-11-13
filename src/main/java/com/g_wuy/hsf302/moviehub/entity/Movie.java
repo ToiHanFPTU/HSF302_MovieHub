@@ -47,8 +47,13 @@ public class Movie {
     @Nationalized
     @Column(name = "image_url", length = 500)
     private String imageUrl;
+
     @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<MovieCategory> movieCategories = new HashSet<>();
+
+    @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Showtime> showtimes = new HashSet<>();
+
     public Set<Category> getCategories() {
         return movieCategories.stream()
                 .map(MovieCategory::getCategory)

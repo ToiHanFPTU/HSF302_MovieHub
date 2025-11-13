@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.Instant;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -33,5 +35,8 @@ public class Showtime {
     @NotNull
     @Column(name = "end_time", nullable = false)
     private Instant endTime;
+
+    @OneToMany(mappedBy = "showtime", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Ticket> tickets = new HashSet<>();
 
 }
