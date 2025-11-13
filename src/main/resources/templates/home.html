@@ -15,6 +15,98 @@
             transform: scale(1.03);
             transition: 0.2s;
         }
+        body.bg-light {
+            background-color: #121212; /* nền tối */
+            color: white; /* chữ sáng */
+        }
+
+        .card {
+            background-color: #1e1e1e; /* card nền tối */
+            color: #e0e0e0;
+            border: none;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .card:hover {
+            transform: scale(1.03);
+            box-shadow: 0 6px 20px rgba(255,255,255,0.1);
+        }
+
+        /* ================= Filter Form ================= */
+        form.row.g-3 {
+            background-color: #1f1f1f; /* nền form tối */
+            padding: 20px 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(255,255,255,0.05);
+        }
+
+        form.row.g-3 label {
+            font-weight: 500;
+            color: #90caf9; /* màu xanh nhạt để dễ nhìn trên nền tối */
+        }
+
+        form.row.g-3 input.form-control,
+        form.row.g-3 select.form-select {
+            background-color: #2c2c2c; /* nền input tối */
+            color: white; /* chữ sáng */
+            border-radius: 8px;
+            border: 1px solid #444;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        form.row.g-3 input.form-control:focus,
+        form.row.g-3 select.form-select:focus {
+            border-color: #90caf9;
+            box-shadow: 0 0 5px rgba(144,202,249,0.25);
+        }
+
+        form.row.g-3 button.btn-primary {
+            background-color: #1976d2; /* primary màu xanh đậm hơn */
+            border-color: #1976d2;
+            border-radius: 8px;
+            color: #fff;
+            transition: background-color 0.2s, transform 0.2s;
+        }
+
+        form.row.g-3 button.btn-primary:hover {
+            background-color: #1565c0;
+            transform: translateY(-2px);
+        }
+
+        form.row.g-3 .btn-secondary {
+            background-color: #6c757d;
+            border-color: #6c757d;
+            border-radius: 8px;
+            color: #fff;
+            margin-left: 5px;
+        }
+
+        form.row.g-3 .btn-secondary:hover {
+            background-color: #5c636a;
+            transform: translateY(-2px);
+        }
+
+        /* ================= Movie Categories ================= */
+        .category-badge {
+            display: inline-block;
+            padding: 2px 6px;
+            margin-right: 4px;
+            margin-bottom: 4px;
+            background-color: #1976d2;
+            color: #fff;
+            border-radius: 6px;
+            font-size: 0.8rem;
+        }
+
+        /* ================= Links ================= */
+        a {
+            color: #90caf9;
+        }
+
+        a:hover {
+            color: #64b5f6;
+            text-decoration: none;
+        }
     </style>
 </head>
 <body class="bg-light">
